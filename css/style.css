@@ -1,4 +1,4 @@
-/* 仙侠放置游戏 - 水墨中国风样式 */
+/* 仙侠放置游戏 - 移动端优化版 */
 :root {
     --bg-dark: #1a1a2e;
     --bg-panel: #16213e;
@@ -28,9 +28,9 @@ body {
     color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
+    font-size: 14px;
 }
 
-/* 背景效果 */
 body::before {
     content: '';
     position: fixed;
@@ -47,95 +47,103 @@ body::before {
 }
 
 .game-container {
-    display: grid;
-    grid-template-columns: 120px 1fr 280px;
-    grid-template-rows: auto 1fr;
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
     position: relative;
     z-index: 1;
 }
 
-/* 头部 */
+/* 头部 - 移动端优化 */
 .game-header {
-    grid-column: 1 / -1;
     background: linear-gradient(180deg, var(--bg-panel) 0%, transparent 100%);
-    padding: 15px 30px;
+    padding: 10px 15px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 10px;
     border-bottom: 1px solid var(--border);
     backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 50;
 }
 
 .game-header h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     background: linear-gradient(135deg, var(--gold) 0%, var(--primary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 0 30px rgba(233, 69, 96, 0.5);
-    letter-spacing: 5px;
+    text-align: center;
+    letter-spacing: 3px;
 }
 
 .player-info {
     display: flex;
-    gap: 30px;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 .realm-display, .spirit-display {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
+    flex: 1;
 }
 
 .realm-display .label, .spirit-display .label {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--text-secondary);
-    margin-bottom: 2px;
 }
 
 .realm-display .value {
-    font-size: 1.4rem;
+    font-size: 1rem;
     color: var(--gold);
     font-weight: bold;
 }
 
 .realm-display .sub-value {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     color: var(--accent);
 }
 
 .spirit-display .value {
-    font-size: 1.4rem;
+    font-size: 1rem;
     color: var(--spirit);
     font-weight: bold;
 }
 
 .spirit-display .sub-value {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     color: var(--text-secondary);
 }
 
-/* 导航 */
+/* 导航 - 底部固定 */
 .game-nav {
     background: var(--bg-panel);
-    padding: 20px 10px;
+    padding: 8px;
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    border-right: 1px solid var(--border);
+    justify-content: space-around;
+    gap: 5px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    overflow-x: auto;
 }
 
 .nav-btn {
     background: transparent;
     border: 1px solid transparent;
     color: var(--text-secondary);
-    padding: 12px 8px;
+    padding: 8px 10px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     transition: all 0.3s ease;
-    border-radius: 8px;
+    border-radius: 5px;
     font-family: inherit;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .nav-btn:hover {
@@ -147,14 +155,14 @@ body::before {
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: white;
     border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(233, 69, 96, 0.3);
 }
 
 /* 主内容区 */
 .game-content {
-    padding: 20px;
+    padding: 15px;
+    flex: 1;
+    padding-bottom: 80px;
     overflow-y: auto;
-    max-height: calc(100vh - 80px);
 }
 
 .panel {
@@ -172,50 +180,53 @@ body::before {
 }
 
 .panel-header {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
 }
 
 .panel-header h2 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: var(--gold);
-    letter-spacing: 3px;
+    letter-spacing: 2px;
+    text-align: center;
 }
 
 .panel-body {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
 }
 
-/* 修炼面板 */
+/* 修炼面板 - 移动端 */
 .cultivation-status {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .cultivation-status h3 {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: var(--accent);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .roots-grid {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .root-item {
-    padding: 8px 15px;
+    padding: 6px 10px;
     background: var(--bg-card);
     border-radius: 5px;
     border: 1px solid var(--border);
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
+    font-size: 0.8rem;
 }
 
 .root-item.active {
@@ -223,49 +234,42 @@ body::before {
     box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
 }
 
-.root-item .element {
-    font-size: 1.2rem;
-}
-
 .progress-bar {
-    height: 20px;
+    height: 16px;
     background: var(--bg-card);
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
-    margin: 10px 0;
 }
 
 .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--secondary) 0%, var(--primary) 100%);
     transition: width 0.3s ease;
-    border-radius: 10px;
+    border-radius: 8px;
 }
 
 .cultivation-actions {
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .action-btn {
-    padding: 15px 30px;
+    padding: 12px 20px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-family: inherit;
     transition: all 0.3s ease;
     font-weight: bold;
+    flex: 1;
+    min-width: 120px;
 }
 
 .action-btn.primary {
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: white;
-}
-
-.action-btn.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
 }
 
 .action-btn.warning {
@@ -278,14 +282,9 @@ body::before {
     color: white;
 }
 
-.action-btn.small {
-    padding: 8px 15px;
-    font-size: 0.8rem;
-}
-
 .upgrade-section {
     background: var(--bg-card);
-    padding: 15px;
+    padding: 12px;
     border-radius: 10px;
 }
 
@@ -293,8 +292,9 @@ body::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 8px;
     border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
 }
 
 .upgrade-item:last-child {
@@ -302,55 +302,44 @@ body::before {
 }
 
 .upgrade-item button {
-    padding: 8px 15px;
+    padding: 6px 12px;
     background: var(--secondary);
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-family: inherit;
-    transition: all 0.3s ease;
-}
-
-.upgrade-item button:hover {
-    background: var(--primary);
+    font-size: 0.75rem;
 }
 
 /* 功法网格 */
 .techniques-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
 }
 
 .technique-card {
     background: var(--bg-card);
-    padding: 15px;
-    border-radius: 10px;
+    padding: 10px;
+    border-radius: 8px;
     border: 1px solid var(--border);
-    transition: all 0.3s ease;
-}
-
-.technique-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
 }
 
 .technique-card .name {
     color: var(--gold);
-    font-size: 1.1rem;
-    margin-bottom: 5px;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
 }
 
 .technique-card .type {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--text-secondary);
-    margin-bottom: 10px;
+    margin-bottom: 6px;
 }
 
 .technique-card .effect {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     color: var(--spirit);
 }
 
@@ -358,167 +347,146 @@ body::before {
 .artifact-slots {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 15px;
 }
 
 .artifact-slot {
     background: var(--bg-card);
-    padding: 20px;
-    border-radius: 10px;
+    padding: 10px;
+    border-radius: 8px;
     text-align: center;
-    border: 2px dashed var(--border);
-    min-height: 100px;
+    border: 1px dashed var(--border);
+    min-height: 60px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-}
-
-.artifact-slot.equipped {
-    border-style: solid;
-    border-color: var(--gold);
+    font-size: 0.75rem;
 }
 
 .slot-label {
-    font-size: 0.8rem;
+    font-size: 0.65rem;
     color: var(--text-secondary);
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .artifacts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
 }
 
 /* 灵宠 */
 .pet-display {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
 }
 
 .pet-card {
     background: var(--bg-card);
-    padding: 30px;
-    border-radius: 15px;
+    padding: 20px;
+    border-radius: 12px;
     text-align: center;
     border: 2px solid var(--gold);
-    min-width: 200px;
+    min-width: 150px;
 }
 
 .pet-icon {
-    font-size: 4rem;
-    margin-bottom: 10px;
+    font-size: 3rem;
+    margin-bottom: 8px;
 }
 
 .pet-name {
     color: var(--gold);
-    font-size: 1.2rem;
-    margin-bottom: 5px;
+    font-size: 1rem;
 }
 
 .pet-actions {
     display: flex;
-    gap: 15px;
+    gap: 10px;
     justify-content: center;
-    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .pet-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
 }
 
 /* 宗门 */
 .sect-info {
     background: var(--bg-card);
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
-    margin-bottom: 20px;
-}
-
-.sect-info h3 {
-    color: var(--gold);
-    margin-bottom: 10px;
+    font-size: 0.85rem;
 }
 
 .building-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px;
+    padding: 8px;
     background: var(--bg-panel);
-    border-radius: 8px;
-    margin-top: 10px;
+    border-radius: 6px;
+    margin-top: 8px;
+    font-size: 0.8rem;
 }
 
 .building-item button {
-    padding: 8px 15px;
+    padding: 6px 10px;
     background: var(--secondary);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
-    font-family: inherit;
-}
-
-.building-item button:hover {
-    background: var(--primary);
+    font-size: 0.7rem;
 }
 
 /* BOSS */
 .boss-timer {
     text-align: center;
-    padding: 20px;
+    padding: 15px;
     background: var(--bg-card);
     border-radius: 10px;
-    margin-bottom: 20px;
 }
 
 .boss-card {
     background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
-    padding: 30px;
-    border-radius: 15px;
+    padding: 20px;
+    border-radius: 12px;
     text-align: center;
     border: 2px solid var(--danger);
 }
 
 .boss-icon {
-    font-size: 5rem;
-    margin-bottom: 10px;
+    font-size: 3rem;
+    margin-bottom: 8px;
 }
 
 .boss-name {
     color: var(--danger);
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-}
-
-.boss-hp {
-    margin-bottom: 20px;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
 }
 
 .hp-bar {
-    height: 25px;
+    height: 20px;
     background: #1a1a2e;
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 
 .hp-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--danger) 0%, #ef4444 100%);
-    transition: width 0.3s ease;
 }
 
 .boss-reward {
     background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 100%);
-    padding: 30px;
-    border-radius: 15px;
+    padding: 20px;
+    border-radius: 12px;
     text-align: center;
     color: #1a1a2e;
 }
@@ -527,106 +495,130 @@ body::before {
 .shop-items {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .shop-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
+    padding: 12px;
     background: var(--bg-card);
     border-radius: 8px;
+    font-size: 0.85rem;
 }
 
 .shop-item button {
-    padding: 8px 20px;
+    padding: 6px 15px;
     background: var(--gold);
     color: #1a1a2e;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-family: inherit;
     font-weight: bold;
+    font-size: 0.8rem;
 }
 
-.shop-item button:hover {
-    background: var(--accent);
-}
-
-/* 侧边栏 */
+/* 侧边栏 - 移动端隐藏或底部 */
 .game-sidebar {
-    background: var(--bg-panel);
-    padding: 20px;
-    border-left: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display: none;
 }
 
-.stats-panel, .log-panel, .settings-panel {
-    background: var(--bg-card);
-    padding: 15px;
-    border-radius: 10px;
+/* 响应式 - 平板 */
+@media (min-width: 768px) {
+    .game-container {
+        display: grid;
+        grid-template-columns: 100px 1fr 250px;
+        grid-template-rows: auto 1fr;
+    }
+
+    .game-header {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 15px 30px;
+    }
+
+    .game-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .player-info {
+        justify-content: flex-end;
+        gap: 30px;
+    }
+
+    .realm-display, .spirit-display {
+        align-items: flex-end;
+    }
+
+    .game-nav {
+        flex-direction: column;
+        position: sticky;
+        height: fit-content;
+        top: 80px;
+    }
+
+    .game-content {
+        padding: 20px;
+    }
+
+    .game-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        border-left: 1px solid var(--border);
+    }
+
+    .stats-panel, .log-panel, .settings-panel {
+        background: var(--bg-card);
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .techniques-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 15px;
+    }
+
+    .technique-card {
+        padding: 15px;
+    }
+
+    .cultivation-status {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
-.stats-panel h3, .log-panel h3 {
-    color: var(--gold);
-    font-size: 1rem;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-}
+/* 响应式 - 桌面 */
+@media (min-width: 1200px) {
+    .game-container {
+        grid-template-columns: 120px 1fr 280px;
+    }
 
-.stat-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-}
+    .game-header h1 {
+        font-size: 2rem;
+    }
 
-.stat-item:last-child {
-    border-bottom: none;
-}
+    .techniques-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
 
-.stat-item span:first-child {
-    color: var(--text-secondary);
-}
+    .game-nav {
+        padding: 20px 10px;
+    }
 
-.stat-item span:last-child {
-    color: var(--accent);
-    font-weight: bold;
-}
-
-.log-content {
-    max-height: 200px;
-    overflow-y: auto;
-    font-size: 0.85rem;
-}
-
-.log-content p {
-    padding: 5px 0;
-    color: var(--text-secondary);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.log-content p:last-child {
-    border-bottom: none;
-}
-
-.settings-panel {
-    display: flex;
-    gap: 10px;
-}
-
-.settings-panel .action-btn {
-    flex: 1;
-    padding: 10px;
+    .nav-btn {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
 }
 
 /* 滚动条 */
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
+    height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -635,58 +627,5 @@ body::before {
 
 ::-webkit-scrollbar-thumb {
     background: var(--secondary);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--primary);
-}
-
-/* 响应式 */
-@media (max-width: 1200px) {
-    .game-container {
-        grid-template-columns: 100px 1fr 220px;
-    }
-}
-
-@media (max-width: 900px) {
-    .game-container {
-        grid-template-columns: 80px 1fr;
-    }
-    
-    .game-sidebar {
-        display: none;
-    }
-    
-    .game-header {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .player-info {
-        width: 100%;
-        justify-content: space-around;
-    }
-}
-
-@media (max-width: 600px) {
-    .game-nav {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        flex-direction: row;
-        justify-content: space-around;
-        padding: 10px;
-        z-index: 100;
-    }
-    
-    .game-content {
-        padding-bottom: 80px;
-    }
-    
-    .nav-btn {
-        padding: 8px 5px;
-        font-size: 0.7rem;
-    }
+    border-radius: 2px;
 }

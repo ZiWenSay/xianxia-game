@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>仙侠放置 - 问道长生</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>问道长生 - 仙侠放置</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -25,7 +25,7 @@
             </div>
         </header>
 
-        <!-- 左侧导航 -->
+        <!-- 顶部导航 -->
         <nav class="game-nav">
             <button class="nav-btn active" data-tab="cultivation">修炼</button>
             <button class="nav-btn" data-tab="techniques">功法</button>
@@ -41,39 +41,40 @@
             <!-- 修炼面板 -->
             <section id="cultivation-panel" class="panel active">
                 <div class="panel-header">
-                    <h2>修炼中心</h2>
+                    <h2>🧘 修炼</h2>
                 </div>
                 <div class="panel-body">
-                    <div class="cultivation-status">
-                        <div class="spirit-roots">
-                            <h3>灵根</h3>
-                            <div id="roots-display" class="roots-grid">
-                                <!-- 灵根显示 -->
-                            </div>
-                        </div>
-                        <div class="cultivation-progress">
-                            <h3>修炼进度</h3>
-                            <div class="progress-bar">
-                                <div id="cultivation-progress-bar" class="progress-fill"></div>
-                            </div>
-                            <p><span id="current-cultivation">0</span> / <span id="required-cultivation">100</span></p>
-                        </div>
+                    <!-- 灵根显示 -->
+                    <div class="roots-section">
+                        <h3>🌟 灵根</h3>
+                        <div id="roots-display" class="roots-grid"></div>
                     </div>
+                    
+                    <!-- 修炼进度 -->
+                    <div class="progress-section">
+                        <h3>📈 修炼进度</h3>
+                        <div class="progress-bar">
+                            <div id="cultivation-progress-bar" class="progress-fill"></div>
+                        </div>
+                        <p><span id="current-cultivation">0</span> / <span id="required-cultivation">100</span></p>
+                    </div>
+                    
+                    <!-- 修炼按钮 -->
                     <div class="cultivation-actions">
-                        <button id="cultivate-btn" class="action-btn primary">修炼 (+1)</button>
-                        <button id="breakthrough-btn" class="action-btn warning">突破境界</button>
+                        <button id="cultivate-btn" class="action-btn primary">🧘 修炼</button>
+                        <button id="breakthrough-btn" class="action-btn warning">⚡ 突破</button>
                     </div>
+                    
+                    <!-- 升级 -->
                     <div class="upgrade-section">
-                        <h3>灵气获取</h3>
+                        <h3>⬆️ 升级</h3>
                         <div class="upgrade-item">
-                            <span>灵根等级</span>
-                            <span id="root-level">Lv.1</span>
-                            <button onclick="game.upgradeRoot()">升级 (10灵气)</button>
+                            <span>灵根等级 Lv.<span id="root-level">1</span></span>
+                            <button onclick="game.upgradeRoot()">升级</button>
                         </div>
                         <div class="upgrade-item">
-                            <span>修炼效率</span>
-                            <span id="efficiency-level">Lv.1</span>
-                            <button onclick="game.upgradeEfficiency()">升级 (50灵气)</button>
+                            <span>修炼效率 Lv.<span id="efficiency-level">1</span></span>
+                            <button onclick="game.upgradeEfficiency()">升级</button>
                         </div>
                     </div>
                 </div>
@@ -82,19 +83,17 @@
             <!-- 功法面板 -->
             <section id="techniques-panel" class="panel">
                 <div class="panel-header">
-                    <h2>功法系统</h2>
+                    <h2>📚 功法</h2>
                 </div>
                 <div class="panel-body">
-                    <div id="techniques-list" class="techniques-grid">
-                        <!-- 功法列表 -->
-                    </div>
+                    <div id="techniques-list" class="techniques-grid"></div>
                 </div>
             </section>
 
             <!-- 法宝面板 -->
             <section id="artifacts-panel" class="panel">
                 <div class="panel-header">
-                    <h2>法宝系统</h2>
+                    <h2>⚔️ 法宝</h2>
                 </div>
                 <div class="panel-body">
                     <div class="artifact-slots">
@@ -111,35 +110,27 @@
                             <div class="slot-content">未装备</div>
                         </div>
                     </div>
-                    <div class="artifact-craft">
-                        <h3>炼制法宝</h3>
-                        <button id="craft-btn" class="action-btn">炼制法宝 (1000灵气)</button>
-                    </div>
-                    <div id="artifacts-inventory" class="artifacts-grid">
-                        <!-- 法宝背包 -->
-                    </div>
+                    <button id="craft-btn" class="action-btn primary" style="margin-bottom:15px;">🔨 炼制法宝</button>
+                    <div id="artifacts-inventory" class="artifacts-grid"></div>
                 </div>
             </section>
 
             <!-- 灵宠面板 -->
             <section id="pets-panel" class="panel">
                 <div class="panel-header">
-                    <h2>灵宠系统</h2>
+                    <h2>🐲 灵宠</h2>
                 </div>
                 <div class="panel-body">
                     <div class="pet-display">
                         <div id="current-pet" class="pet-card">
-                            <div class="pet-icon">🐲</div>
+                            <div class="pet-icon">🥚</div>
                             <div class="pet-name">暂无灵宠</div>
                             <div class="pet-level">等级: 0</div>
                         </div>
                     </div>
                     <div class="pet-actions">
-                        <button id="catch-pet-btn" class="action-btn">捕捉灵宠 (500灵气)</button>
-                        <button id="train-pet-btn" class="action-btn">培养灵宠 (200灵气)</button>
-                    </div>
-                    <div id="pet-list" class="pet-list">
-                        <!-- 灵宠列表 -->
+                        <button id="catch-pet-btn" class="action-btn primary">🎯 捕捉</button>
+                        <button id="train-pet-btn" class="action-btn warning">💪 培养</button>
                     </div>
                 </div>
             </section>
@@ -147,30 +138,25 @@
             <!-- 宗门面板 -->
             <section id="sect-panel" class="panel">
                 <div class="panel-header">
-                    <h2>宗门系统</h2>
+                    <h2>🏛️ 宗门</h2>
                 </div>
                 <div class="panel-body">
                     <div class="sect-info">
-                        <h3>宗门：<span id="sect-name">未建立</span></h3>
-                        <p>宗门等级: <span id="sect-level">0</span></p>
-                        <p>宗门成员: <span id="sect-members">0</span> / <span id="sect-max-members">10</span></p>
+                        <p>宗门: <span id="sect-name">未建立</span></p>
+                        <p>等级: <span id="sect-level">0</span></p>
                     </div>
                     <div class="sect-buildings">
-                        <h3>建筑</h3>
                         <div class="building-item">
-                            <span>修炼室</span>
-                            <span id="training-room-level">Lv.0</span>
-                            <button onclick="game.upgradeBuilding('training')">升级 (1000灵气)</button>
+                            <span>🧘 修炼室 Lv.<span id="training-room-level">0</span></span>
+                            <button onclick="game.upgradeBuilding('training')">升级</button>
                         </div>
                         <div class="building-item">
-                            <span>灵药园</span>
-                            <span id="herb-garden-level">Lv.0</span>
-                            <button onclick="game.upgradeBuilding('herb')">升级 (800灵气)</button>
+                            <span>🌿 灵药园 Lv.<span id="herb-garden-level">0</span></span>
+                            <button onclick="game.upgradeBuilding('herb')">升级</button>
                         </div>
                         <div class="building-item">
-                            <span>炼器室</span>
-                            <span id="forge-level">Lv.0</span>
-                            <button onclick="game.upgradeBuilding('forge')">升级 (1200灵气)</button>
+                            <span>🔨 炼器室 Lv.<span id="forge-level">0</span></span>
+                            <button onclick="game.upgradeBuilding('forge')">升级</button>
                         </div>
                     </div>
                 </div>
@@ -179,25 +165,25 @@
             <!-- BOSS面板 -->
             <section id="boss-panel" class="panel">
                 <div class="panel-header">
-                    <h2>世界BOSS</h2>
+                    <h2>👹 世界BOSS</h2>
                 </div>
                 <div class="panel-body">
                     <div class="boss-timer">
-                        <p>下次BOSS刷新: <span id="boss-timer">00:00:00</span></p>
+                        <p>下次BOSS: <span id="boss-timer">--:--:--</span></p>
                     </div>
-                    <div id="boss-display" class="boss-card" style="display: none;">
+                    <div id="boss-display" class="boss-card" style="display:none;">
                         <div class="boss-icon">👹</div>
                         <div class="boss-name">BOSS名称</div>
                         <div class="boss-hp">
                             <div class="hp-bar">
                                 <div id="boss-hp-bar" class="hp-fill"></div>
                             </div>
-                            <span id="boss-hp-text">10000 / 10000</span>
+                            <span id="boss-hp-text">0 / 0</span>
                         </div>
-                        <button id="attack-boss-btn" class="action-btn danger">攻击BOSS</button>
+                        <button id="attack-boss-btn" class="action-btn danger">⚔️ 攻击</button>
                     </div>
-                    <div id="boss-reward" class="boss-reward" style="display: none;">
-                        <h3>BOSS已被击杀！</h3>
+                    <div id="boss-reward" class="boss-reward" style="display:none;">
+                        <h3>🎉 BOSS已被击杀！</h3>
                         <p>奖励: <span id="reward-amount">0</span> 灵气</p>
                     </div>
                 </div>
@@ -206,62 +192,26 @@
             <!-- 商店面板 -->
             <section id="shop-panel" class="panel">
                 <div class="panel-header">
-                    <h2>商店</h2>
+                    <h2>🏪 商店</h2>
                 </div>
                 <div class="panel-body">
                     <div class="shop-items">
                         <div class="shop-item">
-                            <span>灵气丹 (每秒+1)</span>
-                            <span>100灵气</span>
-                            <button onclick="game.buyItem('spiritPill')">购买</button>
+                            <span>💊 灵气丹</span>
+                            <button onclick="game.buyItem('spiritPill')">100</button>
                         </div>
                         <div class="shop-item">
-                            <span>灵根果 (灵根经验+100)</span>
-                            <span>200灵气</span>
-                            <button onclick="game.buyItem('rootFruit')">购买</button>
+                            <span>🍎 灵根果</span>
+                            <button onclick="game.buyItem('rootFruit')">200</button>
                         </div>
                         <div class="shop-item">
-                            <span>突破丹 (突破成功率+10%)</span>
-                            <span>500灵气</span>
-                            <button onclick="game.buyItem('breakthroughPill')">购买</button>
+                            <span>⚗️ 突破丹</span>
+                            <button onclick="game.buyItem('breakthroughPill')">500</button>
                         </div>
                     </div>
                 </div>
             </section>
         </main>
-
-        <!-- 右侧信息栏 -->
-        <aside class="game-sidebar">
-            <div class="stats-panel">
-                <h3>角色属性</h3>
-                <div class="stat-item">
-                    <span>战力</span>
-                    <span id="combat-power">0</span>
-                </div>
-                <div class="stat-item">
-                    <span>攻击</span>
-                    <span id="attack">10</span>
-                </div>
-                <div class="stat-item">
-                    <span>防御</span>
-                    <span id="defense">5</span>
-                </div>
-                <div class="stat-item">
-                    <span>生命</span>
-                    <span id="hp">100</span>
-                </div>
-            </div>
-            <div class="log-panel">
-                <h3>修炼日志</h3>
-                <div id="game-log" class="log-content">
-                    <p>欢迎来到问道长生！</p>
-                </div>
-            </div>
-            <div class="settings-panel">
-                <button onclick="game.resetGame()" class="action-btn danger small">重置游戏</button>
-                <button onclick="game.saveGame()" class="action-btn small">保存游戏</button>
-            </div>
-        </aside>
     </div>
 
     <script src="js/game.js"></script>
