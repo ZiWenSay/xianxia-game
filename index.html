@@ -194,13 +194,15 @@
         try{
             let d=localStorage.getItem('xianxia_v4');
             if(d){
-                game={...game,...JSON.parse(d), buildings:game.buildings, tech:game.tech, techLevel:game.techLevel};
+                let saved=JSON.parse(d);
+                game={...game,...saved};
                 // 修复
                 ['spirit','stone','herb','ore','realm','realmLv','cult','disciples'].forEach(k=>game[k]=getNum(game[k]));
                 game.roots=getRoots();
                 if(!game.buildings)game.buildings={train:0,alchemy:0,forge:0,park:0,array:0,queue:0};
                 if(!game.tech)game.tech={0:true};
                 if(!game.techLevel)game.techLevel={0:1};
+                if(!game.queues)game.queues=[];
                 
                 let offline=(Date.now()-game.lastSave)/1000;
                 if(offline>60){
