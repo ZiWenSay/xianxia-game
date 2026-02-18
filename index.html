@@ -207,16 +207,21 @@
                 
                 let offline=(Date.now()-game.lastSave)/1000;
                 if(offline>60){
-                    // 离线只算灵田产出的灵气
+                    // 离线只算灵田产出的所有资源
                     let fieldLv = game.buildings.field || 1;
-                    let fieldSpirit = game.fieldWorkers * Math.floor(1 * Math.pow(1.2, fieldLv));
-                    let netGain = fieldSpirit * offline * 0.1;
-                    // 扣除弟子消耗
+                    let stone = game.fieldWorkers * Math.floor(1 * Math.pow(1.2, fieldLv)) * offline * 0.1;
+                    let herb = game.fieldWorkers * Math.floor(0.5 * Math.pow(1.2, fieldLv)) * offline * 0.1;
+                    let ore = game.fieldWorkers * Math.floor(0.3 * Math.pow(1.2, fieldLv)) * offline * 0.1;
+                    game.stone += stone;
+                    game.herb += herb;
+                    game.ore += ore;
+                    // 灵气扣除弟子消耗
+                    let fieldSpirit = game.fieldWorkers * Math.floor(1 * Math.pow(1.2, fieldLv)) * offline * 0.1;
                     let cost = (game.disciples - game.fieldWorkers) * 10 * offline;
-                    netGain -= cost;
-                    if(netGain > 0){
-                        game.spirit += netGain;
-                        alert('离线收益:+'+Math.floor(netGain)+'灵气');
+                    let netSpirit = fieldSpirit - cost;
+                    if(netSpirit > 0){
+                        game.spirit += netSpirit;
+                        alert('离线收益: 灵石+'+Math.floor(stone)+' 药材+'+Math.floor(herb)+' 矿石+'+Math.floor(ore)+' 灵气+'+Math.floor(netSpirit));
                     }
                 }
             }else init();
