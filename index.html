@@ -203,9 +203,14 @@
                 
                 let offline=(Date.now()-game.lastSave)/1000;
                 if(offline>60){
-                    let gain=getProd().spirit*offline*0.5;
-                    game.spirit+=gain;
-                    alert('离线收益:+'+Math.floor(gain)+'灵气');
+                    // 离线收益只有10%，并扣除弟子消耗
+                    let netGain = getProd().spirit * offline * 0.1;
+                    let cost = (game.disciples - game.fieldWorkers) * 10 * offline;
+                    netGain -= cost;
+                    if(netGain > 0){
+                        game.spirit += netGain;
+                        alert('离线收益:+'+Math.floor(netGain)+'灵气');
+                    }
                 }
             }else init();
         }catch(e){init();}
