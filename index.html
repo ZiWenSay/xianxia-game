@@ -116,7 +116,8 @@
         alchemy: {n:'炼丹房', req:{木:2,火:3}, res:{stone:150,herb:50}, time:45, desc:'产出药材'},
         forge: {n:'炼器殿', req:{金:2,火:3}, res:{stone:150,ore:50}, time:45, desc:'产出矿石'},
         park: {n:'灵兽园', req:{木:2,土:3}, res:{stone:200,herb:30}, time:60, desc:'可捕捉更强灵宠'},
-        array: {n:'护山大阵', req:{金:3,木:3,水:3,火:3,土:3}, res:{stone:500,ore:100}, time:120, desc:'全属性加成'}
+        array: {n:'护山大阵', req:{金:3,木:3,水:3,火:3,土:3}, res:{stone:500,ore:100}, time:120, desc:'全属性加成'},
+        queue: {n:'枢机房', req:{}, res:{stone:200}, time:20, desc:'增加同时升级队列'}
     };
 
     // 功法配置
@@ -151,7 +152,7 @@
         fieldWorkers:1, // 灵田劳作弟子
         tech:{}, techLevel:{},
         pet:null,
-        queue:null, queueTime:0,
+        queues:[], // 队列数组
         lastSave:Date.now(),
         meditateTimes:0
     };
@@ -265,7 +266,8 @@
     }
 
     function upgradeBuilding(type){
-        if(game.queue){alert('已有升级在进行中！');return;}
+        let maxQueue = 1 + (game.buildings.queue || 0);
+        if(game.queues.length >= maxQueue){alert('队列已满！枢机房 Lv.'+game.buildings.queue+' 最多'+maxQueue+'个队列');return;}
         let b=BUILDINGS[type];
         let roots=getRoots();
         // 检查灵根
@@ -289,8 +291,7 @@
         game.herb-=b.res.herb||0;
         game.ore-=b.res.ore||0;
         // 开始升级
-        game.queue=type;
-        game.queueTime=Math.max(5, b.time / (1+game.disciples*0.2));
+        game.queues.push({type:type, time:Math.max(5, b.time / (1+game.disciples*0.2)), maxTime:Math.max(5, b.time / (1+game.disciples*0.2))});
         render();
     }
 
@@ -317,16 +318,18 @@
     }
 
     function learnTech(i){
+        let maxQueue = 1 + (game.buildings.queue || 0);
+        if(game.queues.length >= maxQueue){alert('队列已满！');return;}
+        
         if(game.tech[i]){
             // 升级
             let t=TECHS[i];
-            if(game.techLevel[i]>=10)return;
+            if(game.techLevel[i]>=10){alert('已满级！');return;}
             let cost=Math.floor(t.cost.spirit*Math.pow(1.5,t.time)*game.techLevel[i]);
-            if(game.spirit>=cost && !game.queue){
+            if(game.spirit>=cost){
                 game.spirit-=cost;
-                game.queue='tech_'+i;
-                game.queueTime=t.time;
-            }
+                game.queues.push({type:'tech_'+i, time:t.time, maxTime:t.time});
+            }else{alert('灵气不足！');}
         }else{
             // 学习
             let t=TECHS[i];
@@ -346,8 +349,7 @@
             }
             game.spirit-=t.cost.spirit;
             game.stone-=t.cost.stone||0;
-            game.queue='tech_'+i;
-            game.queueTime=t.time;
+            game.queues.push({type:'tech_'+i, time:t.time, maxTime:t.time});
         }
         render();
     }
@@ -429,19 +431,19 @@
             }
             
             // 检查是否正在升级这个建筑
-            let isUpgrading = (game.queue === k);
+            let q = game.queues.find(q => q.type === k);
             let maxTime = Math.max(5,b.time/(1+game.disciples*0.2));
-            let progressPct = isUpgrading ? (1 - game.queueTime / maxTime) * 100 : 0;
+            let progressPct = q ? (1 - q.time / q.maxTime) * 100 : 0;
             
-            bHtml+='<div class="card"><h3>'+b.n+' Lv.'+lv+(isUpgrading?' ⏳':'')+'</h3>';
+            bHtml+='<div class="card"><h3>'+b.n+' Lv.'+lv+(q?' ⏳':'')+'</h3>';
             bHtml+='<p style="font-size:0.8rem;color:#888;">'+b.desc+'</p>';
             bHtml+='<p style="font-size:0.75rem;color:#666;">需要: '+reqs.join(',')+'</p>';
             bHtml+='<p style="font-size:0.75rem;">消耗: '+costHtml.join(', ')+'</p>';
             bHtml+='<p style="font-size:0.75rem;color:#00d4ff;">时间: '+maxTime.toFixed(0)+'秒</p>';
             let canAll = can && canRes;
-            if(isUpgrading){
+            if(q){
                 bHtml+='<div class="progress-bar" style="margin-top:8px;"><div class="progress-fill" style="width:'+progressPct+'%"></div></div>';
-                bHtml+='<p style="font-size:0.7rem;color:#888;margin-top:5px;">剩余 '+Math.ceil(game.queueTime)+' 秒</p>';
+                bHtml+='<p style="font-size:0.7rem;color:#888;margin-top:5px;">剩余 '+Math.ceil(q.time)+' 秒</p>';
             }else{
                 bHtml+='<button class="btn" style="margin-top:10px;" onclick="upgradeBuilding(\''+k+'\')" '+(canAll?'':'disabled')+'>'+(canAll?'升级':(can?'资源不足':'灵根不足'))+'</button>';
             }
@@ -506,22 +508,23 @@
         game.spirit-=idle*10*0.1;
         
         // 队列 (每100ms tick = 0.1秒)
-        if(game.queue){
-            game.queueTime-=0.1;
-            if(game.queueTime<=0){
-                if(game.queue.startsWith('tech_')){
-                    let i=parseInt(game.queue.split('_')[1]);
-                    if(game.tech[i])game.techLevel[i]++;
-                    else{game.tech[i]=true;game.techLevel[i]=1;}
+        for(let i=game.queues.length-1; i>=0; i--){
+            game.queues[i].time -= 0.1;
+            if(game.queues[i].time <= 0){
+                let q = game.queues[i];
+                if(q.type.startsWith('tech_')){
+                    let ti = parseInt(q.type.split('_')[1]);
+                    if(game.tech[ti])game.techLevel[ti]++;
+                    else{game.tech[ti]=true;game.techLevel[ti]=1;}
                 }else{
-                    game.buildings[game.queue]++;
+                    game.buildings[q.type]++;
                 }
-                game.queue=null;
+                game.queues.splice(i, 1);
             }
         }
         
         render();
-    },1000);
+    },100);
 
     setInterval(save,10000);
     load();
