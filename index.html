@@ -63,13 +63,6 @@
                     <p style="font-size:0.8rem;color:#888;margin:8px 0;">提升消耗: <span id="root-cost">10</span> 灵气</p>
                     <button class="btn btn-primary" style="width:100%;" onclick="upgradeRoot()">提升灵根</button>
                 </div>
-                <div class="card">
-                    <h3>⚙️ 队列 <span id="queue-info"></span></h3>
-                    <div id="queue-display"></div>
-                    <div id="queue-progress" class="progress-bar" style="display:none;margin-top:10px;">
-                        <div id="queue-progress-fill" class="progress-fill" style="width:0%"></div>
-                    </div>
-                </div>
             </section>
 
             <!-- 宗门 -->
@@ -403,20 +396,6 @@
         document.getElementById('field-level').textContent='1';
         document.getElementById('field-workers').textContent=game.fieldWorkers;
         
-        // 队列
-        if(game.queue){
-            document.getElementById('queue-info').textContent='('+game.queueTime.toFixed(0)+'秒)';
-            let maxTime = game.queue.startsWith('tech_') ? 30 : 30;
-            let pct = (1 - game.queueTime / maxTime) * 100;
-            document.getElementById('queue-display').innerHTML='<div class="queue-item">升级中... '+Math.ceil(game.queueTime)+'秒</div>';
-            document.getElementById('queue-progress').style.display='block';
-            document.getElementById('queue-progress-fill').style.width=pct+'%';
-        }else{
-            document.getElementById('queue-info').textContent='';
-            document.getElementById('queue-display').innerHTML='<div class="queue-item" style="color:#666;">无队列</div>';
-            document.getElementById('queue-progress').style.display='none';
-        }
-        
         // 建筑
         let bHtml='';
         for(let k in BUILDINGS){
@@ -444,13 +423,24 @@
                 if(have<need)canRes=false;
             }
             
-            bHtml+='<div class="card"><h3>'+b.n+' Lv.'+lv+'</h3>';
+            // 检查是否正在升级这个建筑
+            let isUpgrading = (game.queue === k);
+            let maxTime = Math.max(5,b.time/(1+game.disciples*0.2));
+            let progressPct = isUpgrading ? (1 - game.queueTime / maxTime) * 100 : 0;
+            
+            bHtml+='<div class="card"><h3>'+b.n+' Lv.'+lv+(isUpgrading?' ⏳':'')+'</h3>';
             bHtml+='<p style="font-size:0.8rem;color:#888;">'+b.desc+'</p>';
             bHtml+='<p style="font-size:0.75rem;color:#666;">需要: '+reqs.join(',')+'</p>';
             bHtml+='<p style="font-size:0.75rem;">消耗: '+costHtml.join(', ')+'</p>';
-            bHtml+='<p style="font-size:0.75rem;color:#00d4ff;">时间: '+Math.max(5,b.time/(1+game.disciples*0.2)).toFixed(0)+'秒</p>';
+            bHtml+='<p style="font-size:0.75rem;color:#00d4ff;">时间: '+maxTime.toFixed(0)+'秒</p>';
             let canAll = can && canRes;
-            bHtml+='<button class="btn" style="margin-top:10px;" onclick="upgradeBuilding(\''+k+'\')" '+(canAll?'':'disabled')+'>'+(canAll?'升级':(can?'资源不足':'灵根不足'))+'</button></div>';
+            if(isUpgrading){
+                bHtml+='<div class="progress-bar" style="margin-top:8px;"><div class="progress-fill" style="width:'+progressPct+'%"></div></div>';
+                bHtml+='<p style="font-size:0.7rem;color:#888;margin-top:5px;">剩余 '+Math.ceil(game.queueTime)+' 秒</p>';
+            }else{
+                bHtml+='<button class="btn" style="margin-top:10px;" onclick="upgradeBuilding(\''+k+'\')" '+(canAll?'':'disabled')+'>'+(canAll?'升级':(can?'资源不足':'灵根不足'))+'</button>';
+            }
+            bHtml+='</div>';
         }
         document.getElementById('building-list').innerHTML=bHtml;
         
