@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>问道长生 - 仙侠放置</title>
-    <link rel="stylesheet" href="css/mobile.css?v=3">
+    <link rel="stylesheet" href="css/mobile.css?v=4">
+    <style>
+        .btn:active { transform: scale(0.95); }
+    </style>
 </head>
 <body>
     <div class="game-wrap">
-        <!-- 头部 -->
         <header class="header">
             <h1>问道长生</h1>
             <div class="info-row">
@@ -24,7 +25,6 @@
             </div>
         </header>
 
-        <!-- 导航 -->
         <nav class="nav">
             <button class="nav-btn active" data-tab="cultivation" onclick="switchTab('cultivation')">修炼</button>
             <button class="nav-btn" data-tab="techniques" onclick="switchTab('techniques')">功法</button>
@@ -35,50 +35,40 @@
             <button class="nav-btn" data-tab="shop" onclick="switchTab('shop')">商店</button>
         </nav>
 
-        <!-- 内容 -->
         <main class="content">
-            <!-- 修炼 -->
             <section id="cultivation-panel" class="panel active">
                 <h2>🧘 修炼</h2>
-                
                 <div class="roots-section">
                     <h3>🌟 灵根</h3>
                     <div id="roots-display" class="roots-grid"></div>
                 </div>
-                
                 <div class="progress-section">
                     <h3>📈 修炼进度</h3>
-                    <div class="progress-bar">
-                        <div id="cultivation-progress-bar" class="progress-fill"></div>
-                    </div>
+                    <div class="progress-bar"><div id="cultivation-progress-bar" class="progress-fill"></div></div>
                     <p><span id="current-cultivation">0</span> / <span id="required-cultivation">100</span></p>
                 </div>
-                
                 <div class="btn-group">
-                    <button id="cultivate-btn" class="btn btn-primary" onclick="game && game.cultivate()">🧘 修炼</button>
-                    <button id="breakthrough-btn" class="btn btn-warning" onclick="game && game.breakthrough()">⚡ 突破</button>
+                    <button class="btn btn-primary" onclick="doCultivate()">🧘 修炼</button>
+                    <button class="btn btn-warning" onclick="doBreakthrough()">⚡ 突破</button>
                 </div>
-                
                 <div class="upgrade-section">
                     <h3>⬆️ 升级</h3>
                     <div class="upgrade-item">
                         <span class="name">灵根等级 Lv.<span id="root-level">1</span></span>
-                        <button class="btn btn-primary" onclick="game && game.upgradeRoot()">升级</button>
+                        <button class="btn btn-primary" onclick="doUpgradeRoot()">升级</button>
                     </div>
                     <div class="upgrade-item">
                         <span class="name">修炼效率 Lv.<span id="efficiency-level">1</span></span>
-                        <button class="btn btn-primary" onclick="game && game.upgradeEfficiency()">升级</button>
+                        <button class="btn btn-primary" onclick="doUpgradeEfficiency()">升级</button>
                     </div>
                 </div>
             </section>
 
-            <!-- 功法 -->
             <section id="techniques-panel" class="panel">
                 <h2>📚 功法</h2>
                 <div id="techniques-list" class="tech-grid"></div>
             </section>
 
-            <!-- 法宝 -->
             <section id="artifacts-panel" class="panel">
                 <h2>⚔️ 法宝</h2>
                 <div class="artifact-slots">
@@ -86,11 +76,10 @@
                     <div class="artifact-slot"><span class="label">防具</span><span class="name" id="slot-armor">未装备</span></div>
                     <div class="artifact-slot"><span class="label">饰品</span><span class="name" id="slot-accessory">未装备</span></div>
                 </div>
-                <button id="craft-btn" class="btn btn-primary" style="margin-bottom:15px;width:100%;" onclick="game && game.craftArtifact()">🔨 炼制法宝</button>
+                <button class="btn btn-primary" style="margin-bottom:15px;width:100%;" onclick="doCraft()">🔨 炼制法宝</button>
                 <div id="artifacts-inventory" class="tech-grid"></div>
             </section>
 
-            <!-- 灵宠 -->
             <section id="pets-panel" class="panel">
                 <h2>🐲 灵宠</h2>
                 <div class="pet-card">
@@ -99,12 +88,11 @@
                     <div class="pet-level" id="pet-level">等级: 0</div>
                 </div>
                 <div class="btn-group">
-                    <button id="catch-pet-btn" class="btn btn-primary" onclick="game && game.catchPet()">🎯 捕捉</button>
-                    <button id="train-pet-btn" class="btn btn-warning" onclick="game && game.trainPet()">💪 培养</button>
+                    <button class="btn btn-primary" onclick="doCatchPet()">🎯 捕捉</button>
+                    <button class="btn btn-warning" onclick="doTrainPet()">💪 培养</button>
                 </div>
             </section>
 
-            <!-- 宗门 -->
             <section id="sect-panel" class="panel">
                 <h2>🏛️ 宗门</h2>
                 <div class="sect-info">
@@ -113,58 +101,40 @@
                 </div>
                 <div class="building-item">
                     <span class="name">🧘 修炼室 Lv.<span id="training-room-level">0</span></span>
-                    <button class="btn btn-primary" onclick="game && game.upgradeBuilding('training')">升级</button>
+                    <button class="btn btn-primary" onclick="doUpgradeBuilding('training')">升级</button>
                 </div>
                 <div class="building-item">
                     <span class="name">🌿 灵药园 Lv.<span id="herb-garden-level">0</span></span>
-                    <button class="btn btn-primary" onclick="game && game.upgradeBuilding('herb')">升级</button>
+                    <button class="btn btn-primary" onclick="doUpgradeBuilding('herb')">升级</button>
                 </div>
                 <div class="building-item">
                     <span class="name">🔨 炼器室 Lv.<span id="forge-level">0</span></span>
-                    <button class="btn btn-primary" onclick="game && game.upgradeBuilding('forge')">升级</button>
+                    <button class="btn btn-primary" onclick="doUpgradeBuilding('forge')">升级</button>
                 </div>
             </section>
 
-            <!-- BOSS -->
             <section id="boss-panel" class="panel">
                 <h2>👹 世界BOSS</h2>
-                <div class="boss-timer">
-                    <p>下次BOSS: <span id="boss-timer">--:--:--</span></p>
-                </div>
+                <div class="boss-timer"><p>下次BOSS: <span id="boss-timer">--:--:--</span></p></div>
                 <div id="boss-display" class="boss-card" style="display:none;">
                     <div class="boss-icon">👹</div>
                     <div class="boss-name" id="boss-name">BOSS</div>
-                    <div class="boss-hp">
-                        <div class="hp-bar"><div id="boss-hp-bar" class="hp-fill"></div></div>
-                        <p><span id="boss-hp-text">0 / 0</span></p>
-                    </div>
-                    <button id="attack-boss-btn" class="btn btn-warning" onclick="game && game.attackBoss()">⚔️ 攻击</button>
+                    <div class="boss-hp"><div class="hp-bar"><div id="boss-hp-bar" class="hp-fill"></div></div><p><span id="boss-hp-text">0 / 0</span></p></div>
+                    <button class="btn btn-warning" onclick="doAttackBoss()">⚔️ 攻击</button>
                 </div>
                 <div id="boss-reward" class="boss-reward" style="display:none;">
-                    <h3>🎉 BOSS已被击杀！</h3>
-                    <p>奖励: <span id="reward-amount">0</span> 灵气</p>
+                    <h3>🎉 BOSS已被击杀！</h3><p>奖励: <span id="reward-amount">0</span> 灵气</p>
                 </div>
             </section>
 
-            <!-- 商店 -->
             <section id="shop-panel" class="panel">
                 <h2>🏪 商店</h2>
-                <div class="shop-item">
-                    <span class="name">💊 灵气丹</span>
-                    <button class="btn" onclick="game && game.buyItem('spiritPill')">100</button>
-                </div>
-                <div class="shop-item">
-                    <span class="name">🍎 灵根果</span>
-                    <button class="btn" onclick="game && game.buyItem('rootFruit')">200</button>
-                </div>
-                <div class="shop-item">
-                    <span class="name">⚗️ 突破丹</span>
-                    <button class="btn" onclick="game && game.buyItem('breakthroughPill')">500</button>
-                </div>
+                <div class="shop-item"><span class="name">💊 灵气丹</span><button class="btn" onclick="doBuyItem('spiritPill')">100</button></div>
+                <div class="shop-item"><span class="name">🍎 灵根果</span><button class="btn" onclick="doBuyItem('rootFruit')">200</button></div>
+                <div class="shop-item"><span class="name">⚗️ 突破丹</span><button class="btn" onclick="doBuyItem('breakthroughPill')">500</button></div>
             </section>
         </main>
 
-        <!-- 侧边栏(桌面) -->
         <aside class="sidebar">
             <h3>📊 角色</h3>
             <div class="sect-info">
@@ -174,8 +144,7 @@
                 <p>生命: <span id="hp">100</span></p>
             </div>
             <div style="margin-top:15px;">
-                <button class="btn btn-primary" style="width:100%;font-size:0.8rem;padding:10px;" onclick="game && game.saveGame()">💾 保存</button>
-                <button class="btn" style="width:100%;font-size:0.8rem;padding:10px;margin-top:8px;background:#333;color:#888;" onclick="game && game.resetGame()">🗑️ 重置</button>
+                <button class="btn btn-primary" style="width:100%;font-size:0.8rem;padding:10px;" onclick="doSaveGame()">💾 保存</button>
             </div>
         </aside>
     </div>
@@ -184,11 +153,22 @@
     function switchTab(tab) {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        
         document.querySelector('[data-tab="' + tab + '"]').classList.add('active');
         document.getElementById(tab + '-panel').classList.add('active');
     }
+
+    function doCultivate() { if(game) game.cultivate(); }
+    function doBreakthrough() { if(game) game.breakthrough(); }
+    function doUpgradeRoot() { if(game) game.upgradeRoot(); }
+    function doUpgradeEfficiency() { if(game) game.upgradeEfficiency(); }
+    function doCraft() { if(game) game.craftArtifact(); }
+    function doCatchPet() { if(game) game.catchPet(); }
+    function doTrainPet() { if(game) game.trainPet(); }
+    function doUpgradeBuilding(t) { if(game) game.upgradeBuilding(t); }
+    function doAttackBoss() { if(game) game.attackBoss(); }
+    function doBuyItem(i) { if(game) game.buyItem(i); }
+    function doSaveGame() { if(game) game.saveGame(); }
     </script>
-    <script src="js/game.js?v=3"></script>
+    <script src="js/game.js?v=4"></script>
 </body>
 </html>
