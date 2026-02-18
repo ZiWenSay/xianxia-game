@@ -199,6 +199,8 @@
                 game={...game,...saved};
                 // 修复
                 ['spirit','stone','herb','ore','realm','realmLv','cult','disciples'].forEach(k=>game[k]=getNum(game[k]));
+                game.disciples = game.disciples || 1;
+                game.fieldWorkers = game.fieldWorkers || 1;
                 game.roots=getRoots();
                 if(!game.buildings)game.buildings={field:1,train:0,alchemy:0,forge:0,park:0,array:0,queue:0};
                 if(game.buildings.field === undefined) game.buildings.field = 1;
