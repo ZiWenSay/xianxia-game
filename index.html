@@ -271,6 +271,7 @@
         let maxQueue = 1 + (game.buildings.queue || 0);
         if(game.queues.length >= maxQueue){alert('队列已满！枢机房 Lv.'+game.buildings.queue+' 最多'+maxQueue+'个队列');return;}
         let b=BUILDINGS[type];
+        let lv = game.buildings[type] || 0;
         let roots=getRoots();
         // 检查灵根
         let can=true;
