@@ -35,6 +35,7 @@
                     <div class="big-text" id="realm-text">练气期 第1层</div>
                     <div class="progress-bar"><div id="progress" class="progress-fill" style="width:0%"></div></div>
                     <p><span id="cultivation">0</span> / <span id="need">100</span></p>
+                    <p style="font-size:0.75rem;color:#666;margin-top:5px;">当前境界升级需要 <span id="realm-need">100</span> 灵气</p>
                 </div>
                 <div class="card">
                     <h3>🧘 打坐修炼</h3>
@@ -262,7 +263,12 @@
         return p;
     }
 
-    function getNeed(){return Math.floor(100*Math.pow(1.5,game.realmLv));}
+    function getNeed(){
+        // 境界越高，需要的灵气越多
+        // 大境界加成：realm * 100
+        // 小境界乘法：realmLv * 1.5
+        return Math.floor((100 + game.realm * 100) * Math.pow(1.5, game.realmLv - 1));
+    }
 
     function getCombat(){
         let c=10+game.realm*50;
@@ -403,6 +409,7 @@
         let need=getNeed();
         document.getElementById('cultivation').textContent=Math.floor(getNum(game.cult));
         document.getElementById('need').textContent=need;
+        document.getElementById('realm-need').textContent=need;
         document.getElementById('progress').style.width=(getNum(game.cult)/need*100)+'%';
         document.getElementById('rate').textContent=getProd().spirit.toFixed(1);
         document.getElementById('meditate-gain').textContent=1+Math.floor(game.meditateTimes/10)+game.disciples;
