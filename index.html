@@ -58,9 +58,10 @@
                     </div>
                 </div>
                 <div class="card">
-                    <h3>🌿 灵根</h3>
+                    <h3>🌿 灵根 Lv.<span id="root-lv">1</span></h3>
                     <div id="roots" class="roots-grid"></div>
-                    <button class="btn btn-primary" style="width:100%;margin-top:10px;" onclick="upgradeRoot()">提升灵根</button>
+                    <p style="font-size:0.8rem;color:#888;margin:8px 0;">提升消耗: <span id="root-cost">10</span> 灵气</p>
+                    <button class="btn btn-primary" style="width:100%;" onclick="upgradeRoot()">提升灵根</button>
                 </div>
                 <div class="card">
                     <h3>⚙️ 队列 <span id="queue-info"></span></h3>
@@ -295,6 +296,8 @@
             game.spirit-=cost;
             game.rootLv++;
             game.roots[Math.floor(Math.random()*5)]++;
+        }else{
+            alert('灵气不足！需要 '+cost+' 灵气，当前 '+Math.floor(game.spirit)+'，差 '+(cost-Math.floor(game.spirit)));
         }
         render();
     }
@@ -383,6 +386,8 @@
         document.getElementById('roots').innerHTML=elems.map((e,i)=>
             '<span class="root '+(roots[i]>5?'active':'')+'">'+e+':'+roots[i]+'</span>'
         ).join('');
+        document.getElementById('root-lv').textContent=game.rootLv;
+        document.getElementById('root-cost').textContent=Math.floor(10*Math.pow(1.5,game.rootLv));
         
         document.getElementById('disciples').textContent=game.disciples;
         document.getElementById('max-disciples').textContent=game.maxDisciples;
