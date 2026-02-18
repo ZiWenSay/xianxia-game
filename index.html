@@ -112,6 +112,7 @@
     
     // 建筑配置
     const BUILDINGS = {
+        field: {n:'灵田', req:{}, res:{stone:50}, time:15, desc:'提升资源产出'},
         train: {n:'修炼殿', req:{金:3,木:3,土:3}, res:{stone:100}, time:30, desc:'提升灵气产出'},
         alchemy: {n:'炼丹房', req:{木:2,火:3}, res:{stone:150,herb:50}, time:45, desc:'产出药材'},
         forge: {n:'炼器殿', req:{金:2,火:3}, res:{stone:150,ore:50}, time:45, desc:'产出矿石'},
@@ -147,7 +148,7 @@
         spirit:0, stone:0, herb:0, ore:0,
         realm:0, realmLv:1, cult:0,
         roots:[1,1,1,1,1], rootLv:1,
-        buildings:{train:0,alchemy:0,forge:0,park:0,array:0,queue:0},
+        buildings:{field:1,train:0,alchemy:0,forge:0,park:0,array:0,queue:0},
         disciples:1, maxDisciples:5,
         fieldWorkers:1, // 灵田劳作弟子
         tech:{}, techLevel:{},
@@ -199,7 +200,7 @@
                 // 修复
                 ['spirit','stone','herb','ore','realm','realmLv','cult','disciples'].forEach(k=>game[k]=getNum(game[k]));
                 game.roots=getRoots();
-                if(!game.buildings)game.buildings={train:0,alchemy:0,forge:0,park:0,array:0,queue:0};
+                if(!game.buildings)game.buildings={field:1,train:0,alchemy:0,forge:0,park:0,array:0,queue:0};
                 if(!game.tech)game.tech={0:true};
                 if(!game.techLevel)game.techLevel={0:1};
                 if(!game.queues)game.queues=[];
@@ -227,9 +228,11 @@
         // 基础
         p.spirit=(game.realm+1)*game.realmLv;
         // 灵田产出 (弟子劳作)
-        p.stone+=game.fieldWorkers * 5;
-        p.herb+=game.fieldWorkers * 3;
-        p.ore+=game.fieldWorkers * 2;
+        // 灵田产出 (受灵田等级影响)
+        let fieldLv = game.buildings.field || 1;
+        p.stone += game.fieldWorkers * Math.floor(1 * Math.pow(1.2, fieldLv));
+        p.herb += game.fieldWorkers * Math.floor(0.5 * Math.pow(1.2, fieldLv));
+        p.ore += game.fieldWorkers * Math.floor(0.3 * Math.pow(1.2, fieldLv));
         // 建筑产出
         p.stone+=game.buildings.train*2;
         p.herb+=game.buildings.alchemy*5;
@@ -406,7 +409,7 @@
         document.getElementById('disciple-cost').textContent=(game.disciples - game.fieldWorkers)*10;
         
         // 灵田
-        document.getElementById('field-level').textContent='1';
+        document.getElementById('field-level').textContent=game.buildings.field || 1;
         document.getElementById('field-workers').textContent=game.fieldWorkers;
         
         // 建筑
