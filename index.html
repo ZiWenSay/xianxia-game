@@ -480,13 +480,13 @@
         save();
     }
 
-    // 主循环
+    // 主循环 (每100ms执行一次 = 每秒10次)
     setInterval(()=>{
         let prod=getProd();
-        game.spirit+=prod.spirit/60;
-        game.stone+=prod.stone/60;
-        game.herb+=prod.herb/60;
-        game.ore+=prod.ore/60;
+        game.spirit+=prod.spirit/10;
+        game.stone+=prod.stone/10;
+        game.herb+=prod.herb/10;
+        game.ore+=prod.ore/10;
         
         game.cult+=game.rootLv*0.1;
         if(getNum(game.cult)>=getNeed()){
@@ -495,14 +495,14 @@
             else if(game.realm<9){game.realm++;game.realmLv=1;}
         }
         
-        // 弟子消耗 (只有不在灵田的弟子消耗灵气)
+        // 弟子消耗 (每0.1秒)
         let working = game.fieldWorkers;
         let idle = game.disciples - working;
-        game.spirit-=idle*10/60;
+        game.spirit-=idle*10*0.1;
         
-        // 队列
+        // 队列 (每100ms tick = 0.1秒)
         if(game.queue){
-            game.queueTime-=1/60;
+            game.queueTime-=0.1;
             if(game.queueTime<=0){
                 if(game.queue.startsWith('tech_')){
                     let i=parseInt(game.queue.split('_')[1]);
