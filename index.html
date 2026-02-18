@@ -3,30 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>问道长生 - 仙侠放置</title>
-    <link rel="stylesheet" href="css/mobile.css?v=6">
+    <title>仙侠宇宙 - 问道修仙</title>
+    <link rel="stylesheet" href="css/mobile.css?v=7">
 </head>
 <body>
     <div class="game-wrap">
         <header class="header">
-            <h1>问道长生</h1>
+            <h1>仙侠宇宙</h1>
             <div class="info-row">
-                <div class="info-item realm">
+                <div class="info-item">
                     <div class="label">境界</div>
-                    <div class="value"><span id="realm-name">练气</span> <span id="realm-level">(1层)</span></div>
+                    <div class="value realm" id="realm-name">练气</div>
                 </div>
-                <div class="info-item spirit">
+                <div class="info-item">
                     <div class="label">灵气</div>
-                    <div class="value"><span id="spirit-amount">0</span></div>
+                    <div class="value spirit" id="spirit">0</div>
                 </div>
             </div>
         </header>
 
         <nav class="nav">
             <button class="nav-btn active" data-tab="home" onclick="showTab('home')">首页</button>
-            <button class="nav-btn" data-tab="dungeon" onclick="showTab('dungeon')">副本</button>
-            <button class="nav-btn" data-tab="pet" onclick="showTab('pet')">灵宠</button>
-            <button class="nav-btn" data-tab="sect" onclick="showTab('sect')">宗门</button>
+            <button class="nav-btn" data-tab="planet" onclick="showTab('planet')">星球</button>
+            <button class="nav-btn" data-tab="fleet" onclick="showTab('fleet')">舰队</button>
+            <button class="nav-btn" data-tab="research" onclick="showTab('research')">科技</button>
             <button class="nav-btn" data-tab="shop" onclick="showTab('shop')">商店</button>
         </nav>
 
@@ -35,103 +35,140 @@
             <section id="home-panel" class="panel active">
                 <h2>🏠 修炼状态</h2>
                 
-                <!-- 境界 -->
                 <div class="card">
-                    <h3>🌟 当前境界</h3>
-                    <div class="realm-info">
-                        <span class="big-text" id="realm-text">练气期 第1层</span>
-                    </div>
-                    <div class="progress-section">
-                        <div class="progress-bar"><div id="progress-bar" class="progress-fill" style="width:0%"></div></div>
-                        <p><span id="cultivation">0</span> / <span id="need">100</span></p>
+                    <h3>🌟 境界</h3>
+                    <div class="realm-info" id="realm-info">练气期 第1层</div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ 自动修炼</h3>
+                    <p>每秒自动获得灵气，关闭页面也能继续！</p>
+                    <div class="resource-bar" style="margin:10px 0;">
+                        <span>灵气产量: <b id="production">+1/s</b></span>
                     </div>
                 </div>
 
-                <!-- 挂机 -->
-                <div class="card">
-                    <h3>⚡ 挂机修炼</h3>
-                    <p>当前挂机: <span id="挂机中">无</span></p>
-                    <div class="btn-group" style="margin-top:10px;">
-                        <button class="btn btn-primary" onclick="start挂机()">开始挂机</button>
-                        <button class="btn btn-warning" onclick="stop挂机()">停止</button>
-                    </div>
-                    <p style="margin-top:10px;font-size:0.8rem;color:#888;">每秒自动获得灵气，关闭页面也能继续！</p>
-                </div>
-
-                <!-- 灵根 -->
                 <div class="card">
                     <h3>🌿 灵根</h3>
-                    <div id="roots-display" class="roots-grid"></div>
-                    <button class="btn btn-primary" style="width:100%;margin-top:10px;" onclick="upgradeRoot()">升级灵根 (消耗灵气)</button>
+                    <div id="roots" class="roots-grid"></div>
+                    <button class="btn btn-primary" style="width:100%;margin-top:10px;" onclick="upgradeRoot()">升级灵根</button>
                 </div>
 
-                <!-- 战力 -->
                 <div class="card">
                     <h3>💪 战力</h3>
-                    <p id="combat">0</p>
+                    <div id="combat" style="font-size:1.5rem;color:#ffd700;">0</div>
                 </div>
             </section>
 
-            <!-- 副本 -->
-            <section id="dungeon-panel" class="panel">
-                <h2>🏔️ 副本挂机</h2>
+            <!-- 星球/资源 -->
+            <section id="planet-panel" class="panel">
+                <h2>🏭 星球建设</h2>
                 
-                <div class="dungeon-list" id="dungeon-list">
-                    <!-- 副本列表 -->
+                <div class="card">
+                    <h3>⛏️ 资源建筑</h3>
+                    <div class="building-item">
+                        <div>
+                            <span>灵矿</span>
+                            <span class="level" id="metal-mine">Lv.0</span>
+                        </div>
+                        <button onclick="upgradeBuilding('metal')">升级</button>
+                    </div>
+                    <div class="building-item">
+                        <div>
+                            <span>晶矿</span>
+                            <span class="level" id="crystal-mine">Lv.0</span>
+                        </div>
+                        <button onclick="upgradeBuilding('crystal')">升级</button>
+                    </div>
+                    <div class="building-item">
+                        <div>
+                            <span>灵田</span>
+                            <span class="level" id="deuterium">Lv.0</span>
+                        </div>
+                        <button onclick="upgradeBuilding('deuterium')">升级</button>
+                    </div>
                 </div>
 
-                <div class="card" style="margin-top:15px;">
-                    <h3>⛏️ 采集</h3>
-                    <p>派遣灵宠采集资源</p>
-                    <div class="btn-group" style="margin-top:10px;">
-                        <button class="btn btn-primary" onclick="start采集()">采集灵脉</button>
+                <div class="card">
+                    <h3>⚡ 能源建筑</h3>
+                    <div class="building-item">
+                        <div>
+                            <span>聚灵阵</span>
+                            <span class="level" id="solar-plant">Lv.0</span>
+                        </div>
+                        <button onclick="upgradeBuilding('solar')">升级</button>
                     </div>
-                    <p style="margin-top:10px;font-size:0.8rem;color:#888;" id="采集状态">未采集</p>
+                </div>
+
+                <div class="card">
+                    <h3>🏗️ 设施</h3>
+                    <div class="building-item">
+                        <div>
+                            <span>机器人工坊</span>
+                            <span class="level" id="robot-factory">Lv.0</span>
+                        </div>
+                        <button onclick="upgradeBuilding('robot')">升级</button>
+                    </div>
+                    <div class="building-item">
+                        <div>
+                            <span>船坞</span>
+                            <span class="level" id="shipyard">Lv.0</span>
+                        </div>
+                        <button onclick="upgradeBuilding('shipyard')">升级</button>
+                    </div>
                 </div>
             </section>
 
-            <!-- 灵宠 -->
-            <section id="pet-panel" class="panel">
-                <h2>🐲 灵宠</h2>
+            <!-- 舰队 -->
+            <section id="fleet-panel" class="panel">
+                <h2>🚀 舰队</h2>
                 
                 <div class="card">
-                    <h3>我的灵宠</h3>
-                    <div id="my-pet" style="text-align:center;padding:20px;">
-                        <div style="font-size:3rem;">🥚</div>
-                        <p>暂无灵宠</p>
+                    <h3>🛸 飞船</h3>
+                    <div class="ship-item">
+                        <span>灵剑级战机</span>
+                        <span id="fighter-count">0</span>
+                        <button onclick="buildShip('fighter')">建造</button>
+                    </div>
+                    <div class="ship-item">
+                        <span>仙剑级巡洋舰</span>
+                        <span id="cruiser-count">0</span>
+                        <button onclick="buildShip('cruiser')">建造</button>
+                    </div>
+                    <div class="ship-item">
+                        <span>仙舟级战列舰</span>
+                        <span id="battleship-count">0</span>
+                        <button onclick="buildShip('battleship')">建造</button>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3>捕捉灵宠</h3>
-                    <div class="btn-group">
-                        <button class="btn btn-primary" onclick="捕捉()">捕捉 (500灵气)</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3>灵宠列表</h3>
-                    <div id="pet-list"></div>
+                    <h3>🎯 出征</h3>
+                    <p>派遣舰队探索宇宙</p>
+                    <button class="btn btn-primary" style="width:100%;margin-top:10px;" onclick="expedition()">探索遗迹</button>
                 </div>
             </section>
 
-            <!-- 宗门 -->
-            <section id="sect-panel" class="panel">
-                <h2>🏛️ 宗门</h2>
+            <!-- 科技 -->
+            <section id="research-panel" class="panel">
+                <h2>🔬 科技</h2>
                 
                 <div class="card">
-                    <h3>宗门建筑</h3>
-                    <div class="building-item">
-                        <span>🧘 修炼室 Lv.<span id="b-train">0</span></span>
-                        <button class="btn" onclick="upgradeBuilding('train')">升级</button>
+                    <h3>⚔️ 战斗科技</h3>
+                    <div class="tech-item">
+                        <span>修炼速度</span>
+                        <span class="level" id="tech-speed">Lv.0</span>
+                        <button onclick="research('speed')">研究</button>
                     </div>
-                    <div class="building-item">
-                        <span>⛏️ 矿脉 Lv.<span id="b-mine">0</span></span>
-                        <button class="btn" onclick="upgradeBuilding('mine')">升级</button>
+                    <div class="tech-item">
+                        <span>攻击强化</span>
+                        <span class="level" id="tech-attack">Lv.0</span>
+                        <button onclick="research('attack')">研究</button>
                     </div>
-                    <div class="building-item">
-                        <span>🏠 殿堂 Lv.<span id="b-hall">0</span></span>
-                        <button class="btn" onclick="upgradeBuilding('hall')">升级</button>
+                    <div class="tech-item">
+                        <span>防御强化</span>
+                        <span class="level" id="tech-defense">Lv.0</span>
+                        <button onclick="research('defense')">研究</button>
                     </div>
                 </div>
             </section>
@@ -140,151 +177,174 @@
             <section id="shop-panel" class="panel">
                 <h2>🏪 商店</h2>
                 
-                <div class="shop-item"><span>💊 灵气丹</span><button onclick="buy('spirit')">100</button></div>
-                <div class="shop-item"><span>🍎 灵根果</span><button onclick="buy('root')">200</button></div>
-                <div class="shop-item"><span>🎫 捕捉符</span><button onclick="buy('catch')">300</button></div>
-                <div class="shop-item"><span>⚡ 加速卡</span><button onclick="buy('speed')">500</button></div>
+                <div class="shop-item">
+                    <span>💊 灵气丹 (+10/s)</span>
+                    <button onclick="buyItem('spirit')">100</button>
+                </div>
+                <div class="shop-item">
+                    <span>🍎 灵根果 (+10灵根)</span>
+                    <button onclick="buyItem('root')">200</button>
+                </div>
+                <div class="shop-item">
+                    <span>🛸 战机设计图</span>
+                    <button onclick="buyItem('fighter')">500</button>
+                </div>
+                <div class="shop-item">
+                    <span>⚡ 加速 (10分钟)</span>
+                    <button onclick="buyItem('speed')">300</button>
+                </div>
             </section>
         </main>
     </div>
 
     <script>
-    // 游戏数据
-    const REALMS = ['练气','筑基','金丹','元婴','化神','炼虚','合体','大乘','渡劫','仙人'];
-    const DUNGEONS = [
-        {n:'灵气洞天',l:1,r:1,d:'基础灵气副本'},
-        {n:'青云山',l:10,r:5,d:'灵气+50%'},
-        {n:'万兽园',l:20,r:10,d:'灵气+100%'},
-        {n:'星辰海',l:30,r:20,d:'灵气+200%'},
-        {n:'仙灵池',l:40,r:50,d:'灵气+500%'},
-        {n:'天道宫',l:50,r:100,d:'灵气+1000%'}
-    ];
-    const PETS = [
-        {n:'小蛇',a:5,v:'🐍'},
-        {n:'白虎',a:15,v:'🐯'},
-        {n:'青龙',a:30,v:'🐉'},
-        {n:'朱雀',a:25,v:'🦅'},
-        {n:'玄武',a:10,v:'🐢'},
-        {n:'麒麟',a:50,v:'🦄'}
-    ];
-    const ELEMENTS = ['金','木','水','火','土'];
+    // 游戏配置
+    const BUILDINGS = {
+        metal: { n:'灵矿', base:10, mul:1.2, prod:1 },
+        crystal: { n:'晶矿', base:20, mul:1.25, prod:2 },
+        deuterium: { n:'灵田', base:30, mul:1.3, prod:3 },
+        solar: { n:'聚灵阵', base:50, mul:1.15, prod:0, energy:1 },
+        robot: { n:'机器人工坊', base:100, mul:1.3 },
+        shipyard: { n:'船坞', base:200, mul:1.3 }
+    };
     
+    const SHIPS = {
+        fighter: { n:'灵剑级', cost:50, atk:10, def:5, space:1 },
+        cruiser: { n:'仙剑级', cost:200, atk:50, def:20, space:5 },
+        battleship: { n:'仙舟级', cost:1000, atk:300, def:100, space:20 }
+    };
+
     let game = {
-        spirit: 0, realm: 0, realmLv: 1, cult: 0,
-        roots: [1,1,1,1,1], rootLv: 1,
-        pet: null, petLv: 1,
-        挂机中: false, 挂机副本: 0,
-        采集: false,
-        sect: {train:0, mine:0, hall:0},
+        spirit: 0,
+        realm: 0, realmLv: 1,
+        roots: [1,1,1,1,1],
+        buildings: { metal:0, crystal:0, deuterium:0, solar:0, robot:0, shipyard:0 },
+        ships: { fighter:0, cruiser:0, battleship:0 },
+        tech: { speed:0, attack:0, defense:0 },
         lastSave: Date.now()
     };
 
+    function getCost(type, level) {
+        let b = BUILDINGS[type];
+        return Math.floor(b.base * Math.pow(b.mul, level));
+    }
+
     function load() {
         try {
-            let d = localStorage.getItem('xianxia_save');
+            let d = localStorage.getItem('xianxia_save2');
             if(d) {
                 game = {...game, ...JSON.parse(d)};
-                // 计算离线收益
+                // 修复NaN
+                game.spirit = Number(game.spirit) || 0;
+                game.realm = Number(game.realm) || 0;
+                game.realmLv = Number(game.realmLv) || 1;
+                game.roots = game.roots.map(r=>Number(r)||1);
+                
+                // 修复建筑
+                Object.keys(game.buildings).forEach(k => {
+                    game.buildings[k] = Number(game.buildings[k]) || 0;
+                });
+                Object.keys(game.ships).forEach(k => {
+                    game.ships[k] = Number(game.ships[k]) || 0;
+                });
+                Object.keys(game.tech).forEach(k => {
+                    game.tech[k] = Number(game.tech[k]) || 0;
+                });
+                
+                // 离线收益
                 let offline = (Date.now() - game.lastSave) / 1000;
                 if(offline > 60) {
-                    let gain = getRate() * offline * 0.5;
+                    let gain = getProduction() * offline * 0.5;
                     game.spirit += gain;
                     alert('离线收益: +' + Math.floor(gain) + '灵气');
                 }
             }
-        } catch(e) {}
-        render();
+        } catch(e) { console.error(e); }
     }
 
     function save() {
         game.lastSave = Date.now();
-        localStorage.setItem('xianxia_save', JSON.stringify(game));
+        localStorage.setItem('xianxia_save2', JSON.stringify(game));
     }
 
-    function getRate() {
-        let r = (game.realm + 1) * game.realmLv * (game.挂机副本 > 0 ? DUNGEONS[game.挂机副本].r : 1);
-        r *= (1 + game.roots.reduce((a,b)=>a+b,0) * 0.1);
-        r *= (1 + game.sect.train * 0.2);
-        return r;
+    function getProduction() {
+        let base = (game.realm + 1) * game.realmLv;
+        // 建筑产出
+        base += game.buildings.metal * 1 * Math.pow(1.1, game.buildings.metal);
+        base += game.buildings.crystal * 2 * Math.pow(1.15, game.buildings.crystal);
+        base += game.buildings.deuterium * 3 * Math.pow(1.2, game.buildings.deuterium);
+        // 灵根
+        base *= (1 + game.roots.reduce((a,b)=>a+b,0) * 0.05);
+        // 科技
+        base *= (1 + game.tech.speed * 0.1);
+        return base;
     }
 
-    function getNeed() {
-        return Math.floor(100 * Math.pow(1.5, game.realmLv));
+    function getCombat() {
+        let atk = 10 + game.realm * 50;
+        let def = 5 + game.realm * 30;
+        // 飞船
+        atk += game.ships.fighter * 10 + game.ships.cruiser * 50 + game.ships.battleship * 300;
+        def += game.ships.fighter * 5 + game.ships.cruiser * 20 + game.ships.battleship * 100;
+        // 科技
+        atk *= (1 + game.tech.attack * 0.1);
+        def *= (1 + game.tech.defense * 0.1);
+        return Math.floor(atk + def);
     }
 
-    function 境界突破() {
-        if(game.cult >= getNeed()) {
-            game.cult = 0;
-            if(game.realmLv < 10) game.realmLv++;
-            else if(game.realm < 9) { game.realm++; game.realmLv = 1; }
+    function upgradeBuilding(type) {
+        let cost = getCost(type, game.buildings[type]);
+        if(game.spirit >= cost) {
+            game.spirit -= cost;
+            game.buildings[type]++;
         }
-        render();
-    }
-
-    function start挂机() {
-        game.挂机中 = true;
-        document.getElementById('挂机中').textContent = DUNGEONS[game.挂机副本].n;
-        render();
-    }
-
-    function stop挂机() {
-        game.挂机中 = false;
-        document.getElementById('挂机中').textContent = '无';
-        render();
-    }
-
-    function selectDungeon(i) {
-        if(game.realm >= DUNGEONS[i].l) {
-            game.挂机副本 = i;
-            if(game.挂机中) {
-                document.getElementById('挂机中').textContent = DUNGEONS[i].n;
-            }
-            render();
-        }
-    }
-
-    function start采集() {
-        game.采集 = true;
-        document.getElementById('采集状态').textContent = '采集中...';
         render();
     }
 
     function upgradeRoot() {
-        let cost = Math.floor(10 * Math.pow(1.5, game.rootLv));
+        let cost = Math.floor(10 * Math.pow(1.5, game.roots.reduce((a,b)=>a+b,0)));
         if(game.spirit >= cost) {
             game.spirit -= cost;
-            game.rootLv++;
             game.roots[Math.floor(Math.random()*5)]++;
         }
         render();
     }
 
-    function upgradeBuilding(type) {
-        let cost = {train:1000, mine:800, hall:1200}[type] * Math.pow(1.5, game.sect[type]);
-        if(game.spirit >= cost) {
+    function buildShip(type) {
+        let s = SHIPS[type];
+        let cost = s.cost * (game.ships[type] + 1);
+        if(game.spirit >= cost && game.buildings.shipyard >= (type==='fighter'?0: type==='cruiser'?2:5)) {
             game.spirit -= cost;
-            game.sect[type]++;
+            game.ships[type]++;
         }
         render();
     }
 
-    function 捕捉() {
-        if(game.spirit >= 500) {
-            game.spirit -= 500;
-            game.pet = PETS[Math.floor(Math.random() * PETS.length)];
-            game.petLv = 1;
+    function research(type) {
+        let cost = Math.floor(500 * Math.pow(2, game.tech[type]));
+        if(game.spirit >= cost) {
+            game.spirit -= cost;
+            game.tech[type]++;
         }
         render();
     }
 
-    function buy(item) {
-        let cost = {spirit:100, root:200, catch:300, speed:500}[item];
-        if(game.spirit >= cost) {
-            game.spirit -= cost;
-            if(item === 'spirit') game.rootLv += 1;
-            else if(item === 'root') game.roots = game.roots.map(r=>r+5);
-            else if(item === 'catch') game.pet = PETS[Math.floor(Math.random()*PETS.length)];
-            else if(item === 'speed') game.spirit += getRate() * 300;
+    function expedition() {
+        let combat = getCombat();
+        let reward = Math.floor(combat * (1 + Math.random()));
+        game.spirit += reward;
+        alert('探索成功！获得 ' + reward + ' 灵气');
+        render();
+    }
+
+    function buyItem(item) {
+        let costs = { spirit:100, root:200, fighter:500, speed:300 };
+        if(game.spirit >= costs[item]) {
+            game.spirit -= costs[item];
+            if(item === 'spirit') game.tech.speed++;
+            if(item === 'root') game.roots = game.roots.map(r=>r+10);
+            if(item === 'fighter') game.ships.fighter++;
+            if(item === 'speed') game.spirit += getProduction() * 600;
         }
         render();
     }
@@ -297,70 +357,46 @@
     }
 
     function render() {
-        document.getElementById('realm-name').textContent = REALMS[game.realm];
-        document.getElementById('realm-level').textContent = '('+game.realmLv+'层)';
-        document.getElementById('spirit-amount').textContent = Math.floor(game.spirit).toLocaleString();
+        let realms = ['练气','筑基','金丹','元婴','化神','炼虚','合体','大乘','渡劫','仙人'];
         
-        let need = getNeed();
-        document.getElementById('realm-text').textContent = REALMS[game.realm] + '期 第' + game.realmLv + '层';
-        document.getElementById('cultivation').textContent = Math.floor(game.cult);
-        document.getElementById('need').textContent = need;
-        document.getElementById('progress-bar').style.width = (game.cult/need*100)+'%';
+        document.getElementById('realm-name').textContent = realms[game.realm];
+        document.getElementById('spirit').textContent = Math.floor(game.spirit).toLocaleString();
+        document.getElementById('realm-info').textContent = realms[game.realm] + '期 第' + game.realmLv + '层';
+        document.getElementById('production').textContent = '+' + getProduction().toFixed(1) + '/s';
         
-        document.getElementById('roots-display').innerHTML = ELEMENTS.map((e,i)=>
+        let elem = ['金','木','水','火','土'];
+        document.getElementById('roots').innerHTML = elem.map((e,i)=>
             '<span class="root '+(game.roots[i]>5?'active':'')+'">'+e+':'+game.roots[i]+'</span>'
         ).join('');
         
-        document.getElementById('combat').textContent = Math.floor(getRate() * 10);
+        document.getElementById('combat').textContent = getCombat().toLocaleString();
         
-        // 副本
-        let dungeonHtml = '';
-        DUNGEONS.forEach((d,i) => {
-            let locked = game.realm < d.l;
-            dungeonHtml += '<div class="dungeon-item '+(game.挂机副本===i?'active':'')+'" onclick="selectDungeon('+i+')" '+(locked?'style="opacity:0.5"':'')+'>';
-            dungeonHtml += '<div class="dun-name">'+d.n+'</div>';
-            dungeonHtml += '<div class="dun-req">'+(locked?'需'+d.l+'境':'灵气x'+d.r)+'</div>';
-            dungeonHtml += '<div class="dun-desc">'+d.d+'</div>';
-            dungeonHtml += '</div>';
+        // 建筑
+        ['metal','crystal','deuterium','solar','robot','shipyard'].forEach(b => {
+            let el = document.getElementById(b + '-mine') || document.getElementById(b + '-plant') || document.getElementById(b + '-factory') || document.getElementById(b + 'yard');
+            if(el) el.textContent = 'Lv.' + game.buildings[b];
         });
-        document.getElementById('dungeon-list').innerHTML = dungeonHtml;
         
-        // 灵宠
-        if(game.pet) {
-            document.getElementById('my-pet').innerHTML = '<div style="font-size:3rem;">'+game.pet.v+'</div><p>'+game.pet.n+' Lv.'+game.petLv+'</p><p>攻击+'+game.pet.a+'</p>';
-        }
+        // 飞船
+        ['fighter','cruiser','battleship'].forEach(s => {
+            document.getElementById(s + '-count').textContent = game.ships[s];
+        });
         
-        // 宗门
-        document.getElementById('b-train').textContent = game.sect.train;
-        document.getElementById('b-mine').textContent = game.sect.mine;
-        document.getElementById('b-hall').textContent = game.sect.hall;
+        // 科技
+        ['speed','attack','defense'].forEach(t => {
+            document.getElementById('tech-' + t).textContent = 'Lv.' + game.tech[t];
+        });
         
         save();
     }
 
-    // 游戏主循环
+    // 主循环
     setInterval(() => {
-        // 挂机获得灵气
-        if(game.挂机中) {
-            game.spirit += getRate() / 10;
-            game.cult += game.rootLv / 10;
-            境界突破();
-        }
-        
-        // 采集
-        if(game.采集 && game.pet) {
-            game.spirit += game.pet.a * game.petLv * (1 + game.sect.mine * 0.1) / 10;
-        }
-        
-        // 自动突破
-        境界突破();
-        
+        game.spirit += getProduction() / 10;
         render();
     }, 100);
 
-    // 自动保存
     setInterval(save, 10000);
-    
     load();
     </script>
 </body>
