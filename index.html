@@ -46,11 +46,15 @@
                     <p>自动获得: +<span id="rate">1</span> 灵气/秒</p>
                 </div>
                 <div class="card">
-                    <h3>⛏️ 采集资源</h3>
+                    <h3>🌾 灵田产出</h3>
+                    <p style="font-size:0.8rem;color:#888;">弟子在灵田中劳作产出资源</p>
+                    <div class="res-item"><span>灵石</span><span>+<span id="p-stone">0</span>/分</span></div>
+                    <div class="res-item"><span>药材</span><span>+<span id="p-herb">0</span>/分</span></div>
+                    <div class="res-item"><span>矿石</span><span>+<span id="p-ore">0</span>/分</span></div>
+                    <p style="font-size:0.75rem;color:#666;margin-top:8px;">灵田等级: <span id="field-level">1</span> | 劳作弟子: <span id="field-workers">1</span></p>
                     <div style="display:flex;gap:8px;margin-top:10px;">
-                        <button class="btn" style="flex:1;background:#2a1a4a;" onclick="gather('stone')">挖矿<br><small>+10灵石</small></button>
-                        <button class="btn" style="flex:1;background:#1a3a2a;" onclick="gather('herb')">采药<br><small>+10药材</small></button>
-                        <button class="btn" style="flex:1;background:#3a2a1a;" onclick="gather('ore')">采矿<br><small>+10矿石</small></button>
+                        <button class="btn" style="flex:1;" onclick="assignDisciple(1)">+1弟子</button>
+                        <button class="btn" style="flex:1;" onclick="assignDisciple(-1)">-1弟子</button>
                     </div>
                 </div>
                 <div class="card">
@@ -147,6 +151,7 @@
         roots:[1,1,1,1,1], rootLv:1,
         buildings:{train:0,alchemy:0,forge:0,park:0,array:0},
         disciples:1, maxDisciples:5,
+        fieldWorkers:1, // 灵田劳作弟子
         tech:{}, techLevel:{},
         pet:null,
         queue:null, queueTime:0,
@@ -159,10 +164,21 @@
         game.tech[0]=true; // 引气诀免费送
         game.techLevel[0]=1;
         // 初始资源
-        game.spirit=50;
+        game.spirit=100;
         game.stone=50;
-        game.herb=20;
-        game.ore=20;
+        game.herb=30;
+        game.ore=30;
+    }
+
+    // 分配弟子到灵田
+    function assignDisciple(count){
+        let available = game.disciples - game.fieldWorkers;
+        if(count > 0 && available > 0){
+            game.fieldWorkers++;
+        }else if(count < 0 && game.fieldWorkers > 0){
+            game.fieldWorkers--;
+        }
+        render();
     }
 
     function meditate(){
@@ -170,15 +186,6 @@
         let gain=1+Math.floor(game.meditateTimes/10)+game.disciples;
         game.spirit+=gain;
         game.meditateTimes++;
-        render();
-    }
-
-    function gather(type){
-        // 采集资源
-        let amount=10+game.disciples;
-        if(type==='stone')game.stone+=amount;
-        else if(type==='herb')game.herb+=amount;
-        else if(type==='ore')game.ore+=amount;
         render();
     }
 
@@ -214,6 +221,10 @@
         let p={spirit:0,stone:0,herb:0,ore:0};
         // 基础
         p.spirit=(game.realm+1)*game.realmLv;
+        // 灵田产出 (弟子劳作)
+        p.stone+=game.fieldWorkers * 5;
+        p.herb+=game.fieldWorkers * 3;
+        p.ore+=game.fieldWorkers * 2;
         // 建筑产出
         p.stone+=game.buildings.train*2;
         p.herb+=game.buildings.alchemy*5;
@@ -221,8 +232,6 @@
         // 灵根
         let roots=getRoots();
         p.spirit*=(1+roots.reduce((a,b)=>a+b,0)*0.1);
-        // 弟子
-        p.spirit*=1+game.disciples*0.1;
         // 功法
         TECHS.forEach((t,i)=>{
             if(game.tech[i]){
@@ -377,7 +386,11 @@
         
         document.getElementById('disciples').textContent=game.disciples;
         document.getElementById('max-disciples').textContent=game.maxDisciples;
-        document.getElementById('disciple-cost').textContent=game.disciples*10;
+        document.getElementById('disciple-cost').textContent=(game.disciples - game.fieldWorkers)*10;
+        
+        // 灵田
+        document.getElementById('field-level').textContent='1';
+        document.getElementById('field-workers').textContent=game.fieldWorkers;
         
         // 队列
         if(game.queue){
@@ -461,8 +474,10 @@
             else if(game.realm<9){game.realm++;game.realmLv=1;}
         }
         
-        // 弟子消耗
-        game.spirit-=game.disciples*10/60;
+        // 弟子消耗 (只有不在灵田的弟子消耗灵气)
+        let working = game.fieldWorkers;
+        let idle = game.disciples - working;
+        game.spirit-=idle*10/60;
         
         // 队列
         if(game.queue){
