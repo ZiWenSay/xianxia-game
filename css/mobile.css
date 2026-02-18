@@ -3,51 +3,46 @@
 html { font-size: 14px; }
 body { font-family: -apple-system, 'Microsoft YaHei', sans-serif; background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%); color: #e0e0e0; min-height: 100vh; }
 
-.header { background: linear-gradient(180deg, #1e1e3a, #0a0a15); padding: 12px 15px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #333; box-shadow: 0 2px 15px rgba(0,0,0,0.5); }
-.header h1 { text-align: center; font-size: 1.4rem; background: linear-gradient(90deg, #ffd700, #ff6b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+.header { background: linear-gradient(180deg, #1e1e3a, #0a0a15); padding: 10px 12px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #333; }
+.header h1 { text-align: center; font-size: 1.2rem; background: linear-gradient(90deg, #ffd700, #ff6b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
 .info-row { display: flex; justify-content: space-around; }
-.info-item { text-align: center; }
-.info-item .label { font-size: 0.7rem; color: #777; }
-.info-item .value { font-size: 1rem; font-weight: bold; }
-.info-item .realm { color: #ffd700; }
-.info-item .spirit { color: #00d4ff; }
+.info-item { text-align: center; cursor: pointer; }
+.info-item .label { font-size: 0.65rem; color: #777; }
+.info-item .value { font-size: 0.9rem; font-weight: bold; color: #00d4ff; }
 
-.nav { display: flex; background: #0a0a15; overflow-x: auto; border-bottom: 1px solid #222; position: sticky; top: 80px; z-index: 99; }
-.nav-btn { flex: 1; min-width: 50px; padding: 12px 8px; background: none; border: none; color: #666; font-size: 0.7rem; cursor: pointer; }
+.nav { display: flex; background: #0a0a15; overflow-x: auto; border-bottom: 1px solid #222; position: sticky; top: 70px; z-index: 99; }
+.nav-btn { flex: 1; min-width: 50px; padding: 10px 5px; background: none; border: none; color: #666; font-size: 0.65rem; cursor: pointer; }
 .nav-btn.active { color: #ffd700; border-bottom: 2px solid #ffd700; }
 
-.content { padding: 15px; padding-bottom: 100px; }
+.content { padding: 12px; padding-bottom: 90px; }
 .panel { display: none; }
 .panel.active { display: block; }
-.panel h2 { font-size: 1rem; color: #ffd700; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px solid #333; }
+.panel h2 { font-size: 0.95rem; color: #ffd700; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid #333; }
 
-.card { background: linear-gradient(135deg, #1e1e3a, #12121f); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #2a2a4a; }
-.card h3 { font-size: 0.9rem; color: #888; margin-bottom: 12px; }
-.big-text { font-size: 1.3rem; color: #ffd700; text-align: center; padding: 10px; }
+.card { background: linear-gradient(135deg, #1e1e3a, #12121f); padding: 12px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #2a2a4a; }
+.card h3 { font-size: 0.9rem; color: #ddd; margin-bottom: 8px; }
+.big-text { font-size: 1.2rem; color: #ffd700; text-align: center; padding: 8px; }
 
-.progress-bar { height: 16px; background: #0a0a15; border-radius: 8px; overflow: hidden; margin: 10px 0; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, #ff6b6b, #ffd700); border-radius: 8px; transition: width 0.3s; }
-.card p { text-align: center; font-size: 0.85rem; color: #777; }
+.progress-bar { height: 14px; background: #0a0a15; border-radius: 7px; overflow: hidden; margin: 8px 0; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #ff6b6b, #ffd700); border-radius: 7px; transition: width 0.3s; }
+.card p { text-align: center; font-size: 0.8rem; color: #777; }
 
-.roots-grid { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
-.root { background: #12121f; padding: 6px 12px; border-radius: 15px; font-size: 0.8rem; border: 1px solid #333; }
+.roots-grid { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px; }
+.root { background: #12121f; padding: 5px 10px; border-radius: 12px; font-size: 0.75rem; border: 1px solid #333; }
 .root.active { border-color: #ffd700; color: #ffd700; }
 
-.build-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #12121f; border-radius: 8px; margin-bottom: 8px; }
-.build-item button { padding: 6px 15px; background: #4a1a6a; color: #fff; border: none; border-radius: 5px; font-size: 0.75rem; }
+.btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: bold; cursor: pointer; background: linear-gradient(135deg, #4a1a6a, #2a0a3a); color: #fff; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: bold; cursor: pointer; background: linear-gradient(135deg, #4a1a6a, #2a0a3a); color: #fff; }
-.btn:active { transform: scale(0.98); }
+.queue-item { background: #2a1a4a; padding: 8px; border-radius: 5px; text-align: center; color: #ffd700; }
 
-.tech-card { background: #12121f; padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #333; }
-.tech-card .name { color: #ffd700; font-size: 0.95rem; }
-.tech-card .desc { color: #888; font-size: 0.8rem; margin: 5px 0; }
-.tech-card .cost { color: #00d4ff; font-size: 0.75rem; }
+.res-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; }
 
 @media (min-width: 768px) {
-    .game-wrap { display: grid; grid-template-columns: 80px 1fr 250px; min-height: 100vh; }
+    .game-wrap { display: grid; grid-template-columns: 80px 1fr 280px; min-height: 100vh; }
     .header { grid-column: 1/-1; display: flex; justify-content: space-between; align-items: center; }
     .header h1 { margin-bottom: 0; }
-    .nav { flex-direction: column; position: sticky; top: 60px; }
-    .content { height: calc(100vh - 60px); overflow-y: auto; }
+    .info-row { gap: 30px; }
+    .nav { flex-direction: column; position: sticky; top: 50px; }
+    .content { height: calc(100vh - 50px); overflow-y: auto; }
 }

@@ -4,103 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>问道长生 - 仙侠放置</title>
-    <link rel="stylesheet" href="css/mobile.css?v=8">
+    <link rel="stylesheet" href="css/mobile.css?v=9">
 </head>
 <body>
     <div class="game-wrap">
         <header class="header">
             <h1>问道长生</h1>
             <div class="info-row">
-                <div class="info-item">
-                    <div class="label">境界</div>
-                    <div class="value realm" id="realm">练气</div>
-                </div>
-                <div class="info-item">
-                    <div class="label">灵气</div>
-                    <div class="value spirit" id="spirit">0</div>
-                </div>
+                <div class="info-item" onclick="showTab('resource')"><div class="label">灵气</div><div class="value" id="r-spirit">0</div></div>
+                <div class="info-item" onclick="showTab('resource')"><div class="label">灵石</div><div class="value" id="r-stone">0</div></div>
+                <div class="info-item" onclick="showTab('resource')"><div class="label">药材</div><div class="value" id="r-herb">0</div></div>
+                <div class="info-item" onclick="showTab('resource')"><div class="label">矿石</div><div class="value" id="r-ore">0</div></div>
             </div>
         </header>
 
         <nav class="nav">
-            <button class="nav-btn active" data-tab="cultivate" onclick="showTab('cultivate')">修炼</button>
+            <button class="nav-btn active" data-tab="home" onclick="showTab('home')">首页</button>
             <button class="nav-btn" data-tab="sect" onclick="showTab('sect')">宗门</button>
             <button class="nav-btn" data-tab="tech" onclick="showTab('tech')">功法</button>
             <button class="nav-btn" data-tab="pet" onclick="showTab('pet')">灵宠</button>
-            <button class="nav-btn" data-tab="dungeon" onclick="showTab('dungeon')">秘境</button>
+            <button class="nav-btn" data-tab="resource" onclick="showTab('resource')">资源</button>
         </nav>
 
         <main class="content">
-            <section id="cultivate-panel" class="panel active">
+            <!-- 首页 -->
+            <section id="home-panel" class="panel active">
                 <h2>🧘 修炼</h2>
-                
                 <div class="card">
                     <h3>🌟 境界</h3>
                     <div class="big-text" id="realm-text">练气期 第1层</div>
                     <div class="progress-bar"><div id="progress" class="progress-fill" style="width:0%"></div></div>
                     <p><span id="cultivation">0</span> / <span id="need">100</span></p>
                 </div>
-
                 <div class="card">
                     <h3>⛺ 闭关修炼</h3>
-                    <p>自动获得灵气，关闭页面也能继续修炼！</p>
-                    <p style="color:#00d4ff;margin:10px 0;">每秒 +<span id="rate">1</span> 灵气</p>
+                    <p>每秒 +<span id="rate">1</span> 灵气</p>
                 </div>
-
                 <div class="card">
                     <h3>🌿 灵根</h3>
                     <div id="roots" class="roots-grid"></div>
-                    <button class="btn btn-primary" style="width:100%;margin-top:10px;" onclick="upgradeRoot()">升级灵根</button>
+                    <button class="btn btn-primary" style="width:100%;margin-top:10px;" onclick="upgradeRoot()">提升灵根</button>
+                </div>
+                <div class="card">
+                    <h3>⚙️ 队列 <span id="queue-info"></span></h3>
+                    <div id="queue-display"></div>
                 </div>
             </section>
 
+            <!-- 宗门 -->
             <section id="sect-panel" class="panel">
                 <h2>🏛️ 宗门</h2>
-                
                 <div class="card">
-                    <h3>🏰 宗门建筑</h3>
-                    <div class="build-item"><span>🧘 修炼殿 Lv.<span id="b-train">0</span></span><button onclick="upgradeSect('train')">升级</button></div>
-                    <div class="build-item"><span>⚗️ 炼丹房 Lv.<span id="b-alchemy">0</span></span><button onclick="upgradeSect('alchemy')">升级</button></div>
-                    <div class="build-item"><span>🔨 炼器殿 Lv.<span id="b-forge">0</span></span><button onclick="upgradeSect('forge')">升级</button></div>
-                    <div class="build-item"><span>🐲 灵兽园 Lv.<span id="b-park">0</span></span><button onclick="upgradeSect('park')">升级</button></div>
-                    <div class="build-item"><span>🛡️ 护山大阵 Lv.<span id="b-array">0</span></span><button onclick="upgradeSect('array')">升级</button></div>
-                </div>
-
-                <div class="card">
-                    <h3>👥 弟子</h3>
-                    <p>弟子数: <span id="disciples">1</span> / <span id="max-disciples">5</span></p>
+                    <h3>👥 弟子: <span id="disciples">1</span> / <span id="max-disciples">5</span></h3>
+                    <p style="font-size:0.8rem;color:#666;">消耗: <span id="disciple-cost">10</span> 灵气/分</p>
                     <button class="btn btn-primary" style="margin-top:10px;" onclick="recruit()">招募弟子</button>
                 </div>
-
-                <div class="card">
-                    <h3>📜 宗门任务</h3>
-                    <div style="display:flex;gap:10px;margin-top:10px;">
-                        <button class="btn" style="flex:1;" onclick="mission('easy')">简单</button>
-                        <button class="btn" style="flex:1;" onclick="mission('normal')">中等</button>
-                        <button class="btn" style="flex:1;" onclick="mission('hard')">困难</button>
-                    </div>
-                    <p id="mission-status" style="margin-top:10px;font-size:0.85rem;color:#666;"></p>
-                </div>
+                <div id="building-list"></div>
             </section>
 
+            <!-- 功法 -->
             <section id="tech-panel" class="panel">
                 <h2>📚 功法</h2>
                 <div id="tech-list"></div>
             </section>
 
+            <!-- 灵宠 -->
             <section id="pet-panel" class="panel">
                 <h2>🐲 灵宠</h2>
                 <div class="card"><div id="my-pet" style="text-align:center;padding:20px;"><div style="font-size:3rem;">🥚</div><p>暂无灵宠</p></div></div>
                 <div class="card"><button class="btn btn-primary" style="width:100%;" onclick="catchPet()">🎯 捕捉灵宠</button></div>
             </section>
 
-            <section id="dungeon-panel" class="panel">
-                <h2>🏔️ 秘境探索</h2>
+            <!-- 资源 -->
+            <section id="resource-panel" class="panel">
+                <h2>📦 资源产出</h2>
                 <div class="card">
-                    <h3>🔮 今日秘境</h3>
-                    <p id="dungeon-name">无</p>
-                    <p style="color:#888;font-size:0.85rem;" id="dungeon-desc"></p>
-                    <button class="btn btn-primary" style="width:100%;margin-top:10px;" onclick="enterDungeon()">进入秘境</button>
+                    <div class="res-item"><span>灵气</span><span>+<span id="p-spirit">0</span>/分</span></div>
+                    <div class="res-item"><span>灵石</span><span>+<span id="p-stone">0</span>/分</span></div>
+                    <div class="res-item"><span>药材</span><span>+<span id="p-herb">0</span>/分</span></div>
+                    <div class="res-item"><span>矿石</span><span>+<span id="p-ore">0</span>/分</span></div>
+                </div>
+                <div class="card">
+                    <h3>📜 建筑升级</h3>
+                    <p style="font-size:0.8rem;color:#888;">升级消耗资源，时间受弟子数量影响</p>
                 </div>
             </section>
         </main>
@@ -108,94 +94,221 @@
 
     <script>
     const REALMS = ['练气','筑基','金丹','元婴','化神','炼虚','合体','大乘','渡劫','仙人'];
-    const TECH = [
-        {n:'引气诀',d:'灵气+10%',c:0},{n:'金刚罩',d:'防御+20%',c:100},{n:'烈焰掌',d:'攻击+25%',c:200},
-        {n:'水云衣',d:'生命+30%',c:300},{n:'青木功',d:'灵气+30%',c:500},{n:'紫雷诀',d:'攻击+50%',c:800},
-        {n:'厚土盾',d:'防御+40%',c:1000},{n:'九转灵诀',d:'灵气+50%',c:1500},{n:'天魔功',d:'攻击+80%',c:2000},{n:'大道经',d:'全+30%',c:5000}
-    ];
-    const PETS = [{n:'青蛇',i:'🐍',a:5},{n:'白虎',i:'🐯',a:15},{n:'青龙',i:'🐉',a:30},{n:'朱雀',i:'🦅',a:25},{n:'玄武',i:'🐢',a:10},{n:'麒麟',i:'🦄',a:50}];
-    const DUNGEONS = [
-        {n:'灵气洞穴',d:'练气期',r:1,reward:'灵气+100'},{n:'青云山',d:'筑基期',r:10,reward:'灵根果'},{n:'万妖森林',d:'金丹期',r:50,reward:'灵宠蛋'},
-        {n:'星辰海',d:'元婴期',r:100,reward:'仙品功法'},{n:'仙灵池',d:'化神期',r:500,reward:'仙器'},{n:'天道宫',d:'渡劫期',r:1000,reward:'仙位'}
-    ];
+    const ELEMS = ['金','木','水','火','土'];
     
-    let game = {spirit:0, realm:0, realmLv:1, cult:0, roots:[1,1,1,1,1], rootLv:1, tech:[true], pet:null, sect:{train:0,alchemy:0,forge:0,park:0,array:0}, disciples:1, mission:null, missionTime:0, dungeon:null, lastSave:Date.now()};
+    // 建筑配置
+    const BUILDINGS = {
+        train: {n:'修炼殿', req:{金:3,木:3,土:3}, res:{stone:100}, time:30, desc:'提升灵气产出'},
+        alchemy: {n:'炼丹房', req:{木:2,火:3}, res:{stone:150,herb:50}, time:45, desc:'产出药材'},
+        forge: {n:'炼器殿', req:{金:2,火:3}, res:{stone:150,ore:50}, time:45, desc:'产出矿石'},
+        park: {n:'灵兽园', req:{木:2,土:3}, res:{stone:200,herb:30}, time:60, desc:'可捕捉更强灵宠'},
+        array: {n:'护山大阵', req:{金:3,木:3,水:3,火:3,土:3}, res:{stone:500,ore:100}, time:120, desc:'全属性加成'}
+    };
 
-    function getSpirits(){return Number(game.spirit)||0;}
-    function getRealm(){return Number(game.realm)||0;}
-    function getRealmLv(){return Number(game.realmLv)||1;}
-    function getCult(){return Number(game.cult)||0;}
-    function getRoots(){return (game.roots||[1,1,1,1,1]).map(r=>Number(r)||1);}
-    function getDisciples(){return Number(game.disciples)||1;}
+    // 功法配置
+    const TECHS = [
+        {n:'引气诀', req:{level:1}, cost:{spirit:0}, time:10, eff:{spirit:0.1}, desc:'灵气+10%'},
+        {n:'聚灵术', req:{level:5,train:3}, cost:{spirit:500,stone:100}, time:30, eff:{spirit:0.2}, desc:'灵气+20%'},
+        {n:'金刚罩', req:{level:3,array:1}, cost:{spirit:200,stone:50}, time:20, eff:{def:0.2}, desc:'防御+20%'},
+        {n:'烈焰掌', req:{level:5,forge:2}, cost:{spirit:300,ore:50}, time:25, eff:{atk:0.25}, desc:'攻击+25%'},
+        {n:'水云衣', req:{level:8,alchemy:3}, cost:{spirit:400,herb:100}, time:30, eff:{hp:0.3}, desc:'生命+30%'},
+        {n:'青木功', req:{level:10,train:5,park:2}, cost:{spirit:800,stone:200,herb:50}, time:45, eff:{spirit:0.3}, desc:'灵气+30%'},
+        {n:'紫雷诀', req:{level:15,array:3}, cost:{spirit:1000,stone:300}, time:60, eff:{atk:0.5}, desc:'攻击+50%'},
+        {n:'厚土盾', req:{level:12,train:5}, cost:{spirit:800,ore:100}, time:50, eff:{def:0.4}, desc:'防御+40%'},
+        {n:'九转灵诀', req:{level:20,train:8}, cost:{spirit:2000,stone:500}, time:90, eff:{spirit:0.5}, desc:'灵气+50%'},
+        {n:'大道经', req:{level:25,array:5}, cost:{spirit:5000,stone:1000}, time:180, eff:{all:0.3}, desc:'全+30%'}
+    ];
+
+    const PETS = [
+        {n:'青蛇',i:'🐍',a:5,b:[0,1,0,0,0],l:1},
+        {n:'白虎',i:'🐯',a:15,b:[2,0,0,1,0],l:5},
+        {n:'青龙',i:'🐉',a:30,b:[1,2,0,0,2],l:10},
+        {n:'朱雀',i:'🦅',a:25,b:[0,1,1,2,0],l:8},
+        {n:'玄武',i:'🐢',a:10,b:[1,0,2,0,2],l:3},
+        {n:'麒麟',i:'🦄',a:50,b:[2,2,1,1,1],l:15}
+    ];
+
+    let game = {
+        spirit:0, stone:0, herb:0, ore:0,
+        realm:0, realmLv:1, cult:0,
+        roots:[1,1,1,1,1], rootLv:1,
+        buildings:{train:0,alchemy:0,forge:0,park:0,array:0},
+        disciples:1, maxDisciples:5,
+        tech:{}, techLevel:{},
+        pet:null,
+        queue:null, queueTime:0,
+        lastSave:Date.now()
+    };
+
+    // 初始化
+    function init(){
+        game.tech[0]=true; // 引气诀免费送
+        game.techLevel[0]=1;
+    }
+
+    function getNum(v){return Number(v)||0;}
+    function getRoots(){return (game.roots||[1,1,1,1,1]).map(r=>getNum(r));}
 
     function load(){
         try{
-            let d=localStorage.getItem('xianxia_v3');
+            let d=localStorage.getItem('xianxia_v4');
             if(d){
-                game={...game,...JSON.parse(d)};
-                game.spirit=getSpirits();game.realm=getRealm();game.realmLv=getRealmLv();game.cult=getCult();
-                game.roots=getRoots();game.disciples=getDisciples();game.sect=game.sect||{train:0,alchemy:0,forge:0,park:0,array:0};
-                game.tech=game.tech||[true];
+                game={...game,...JSON.parse(d), buildings:game.buildings, tech:game.tech, techLevel:game.techLevel};
+                // 修复
+                ['spirit','stone','herb','ore','realm','realmLv','cult','disciples'].forEach(k=>game[k]=getNum(game[k]));
+                game.roots=getRoots();
+                if(!game.buildings)game.buildings={train:0,alchemy:0,forge:0,park:0,array:0};
+                if(!game.tech)game.tech={0:true};
+                if(!game.techLevel)game.techLevel={0:1};
+                
                 let offline=(Date.now()-game.lastSave)/1000;
-                if(offline>60){game.spirit+=getRate()*offline*0.5;alert('离线收益:+'+Math.floor(getRate()*offline*0.5)+'灵气');}
-            }
-        }catch(e){}
+                if(offline>60){
+                    let gain=getProd().spirit*offline*0.5;
+                    game.spirit+=gain;
+                    alert('离线收益:+'+Math.floor(gain)+'灵气');
+                }
+            }else init();
+        }catch(e){init();}
     }
 
-    function save(){game.lastSave=Date.now();localStorage.setItem('xianxia_v3',JSON.stringify(game));}
+    function save(){game.lastSave=Date.now();localStorage.setItem('xianxia_v4',JSON.stringify(game));}
 
-    function getRate(){
-        let r=(game.realm+1)*game.realmLv*(1+game.sect.train*0.2);
-        r*=(1+getRoots().reduce((a,b)=>a+b,0)*0.1);
-        game.tech.forEach((ok,i)=>{if(ok && TECH[i].d.includes('灵气'))r*=1.1;});
-        return r;
+    // 资源产出
+    function getProd(){
+        let p={spirit:0,stone:0,herb:0,ore:0};
+        // 基础
+        p.spirit=(game.realm+1)*game.realmLv;
+        // 建筑产出
+        p.stone+=game.buildings.train*2;
+        p.herb+=game.buildings.alchemy*5;
+        p.ore+=game.buildings.forge*5;
+        // 灵根
+        let roots=getRoots();
+        p.spirit*=(1+roots.reduce((a,b)=>a+b,0)*0.1);
+        // 弟子
+        p.spirit*=1+game.disciples*0.1;
+        // 功法
+        TECHS.forEach((t,i)=>{
+            if(game.tech[i]){
+                let lv=game.techLevel[i]||1;
+                if(t.eff.spirit)p.spirit*=1+t.eff.spirit*lv;
+                if(t.eff.all)p.spirit*=1+t.eff.all*lv;
+            }
+        });
+        return p;
     }
 
     function getNeed(){return Math.floor(100*Math.pow(1.5,game.realmLv));}
-    function getCombat(){let c=10+game.realm*50+game.realmLv*5;c*=(1+game.sect.array*0.1);if(game.pet)c+=game.pet.a*10;return c;}
+
+    function getCombat(){
+        let c=10+game.realm*50;
+        if(game.pet)c+=game.pet.a*10;
+        return c;
+    }
+
+    function canUpgrade(building){
+        let b=BUILDINGS[building];
+        let roots=getRoots();
+        // 检查灵根
+        for(let e in b.req){
+            let ei=ELEMS.indexOf(e);
+            if(roots[ei]<b.req[e])return false;
+        }
+        return true;
+    }
+
+    function upgradeBuilding(type){
+        if(game.queue)return;
+        let b=BUILDINGS[type];
+        // 检查灵根
+        if(!canUpgrade(type)){
+            let req=[];
+            for(let e in b.req)req.push(e+'灵根'+b.req[e]+'级');
+            alert('需要: '+req.join(','));
+            return;
+        }
+        // 检查资源
+        let cost=b.res;
+        if(game.stone<(cost.stone||0)||game.herb<(cost.herb||0)||game.ore<(cost.ore||0)){
+            alert('资源不足！');
+            return;
+        }
+        // 扣除资源
+        game.stone-=cost.stone||0;
+        game.herb-=cost.herb||0;
+        game.ore-=cost.ore||0;
+        // 开始升级
+        game.queue=type;
+        // 时间受弟子数影响
+        game.queueTime=Math.max(5, b.time / (1+game.disciples*0.2));
+        render();
+    }
 
     function upgradeRoot(){
         let cost=Math.floor(10*Math.pow(1.5,game.rootLv));
-        if(game.spirit>=cost){game.spirit-=cost;game.rootLv++;game.roots[Math.floor(Math.random()*5)]++;}
-        render();
-    }
-
-    function learnTech(i){
-        if(game.tech[i])return;
-        if(game.spirit>=TECH[i].c){game.spirit-=TECH[i].c;game.tech[i]=true;}
-        render();
-    }
-
-    function upgradeSect(type){
-        let costs={train:500,alchemy:300,forge:400,park:300,array:600};
-        let cost=Math.floor(costs[type]*Math.pow(1.5,game.sect[type]));
-        if(game.spirit>=cost){game.spirit-=cost;game.sect[type]++;}
+        if(game.spirit>=cost){
+            game.spirit-=cost;
+            game.rootLv++;
+            game.roots[Math.floor(Math.random()*5)]++;
+        }
         render();
     }
 
     function recruit(){
-        let cost=200*game.disciples;
-        if(game.spirit>=cost){game.spirit-=cost;game.disciples++;}
+        let cost=100*game.disciples;
+        if(game.spirit>=cost && game.disciples<game.maxDisciples){
+            game.spirit-=cost;
+            game.disciples++;
+            game.maxDisciples=5+Math.floor(game.buildings.train*0.5);
+        }
         render();
     }
 
-    function mission(level){
-        if(game.mission)return;
-        let cost={easy:50,normal:200,hard:500};
-        if(game.spirit>=cost[level]){game.spirit-=cost[level];game.mission=level;game.missionTime=30;
-            document.getElementById('mission-status').textContent='弟子历练中...';render();}
+    function learnTech(i){
+        if(game.tech[i]){
+            // 升级
+            let t=TECHS[i];
+            if(game.techLevel[i]>=10)return;
+            let cost=Math.floor(t.cost.spirit*Math.pow(1.5,t.time)*game.techLevel[i]);
+            if(game.spirit>=cost && !game.queue){
+                game.spirit-=cost;
+                game.queue='tech_'+i;
+                game.queueTime=t.time;
+            }
+        }else{
+            // 学习
+            let t=TECHS[i];
+            // 检查条件
+            if(game.realmLv<t.req.level){
+                alert('境界不足，需要'+t.req.level+'层');
+                return;
+            }
+            if(t.req.train && game.buildings.train<t.req.train){
+                alert('修炼殿等级不足');
+                return;
+            }
+            // 检查资源
+            if(game.spirit<t.cost.spirit || game.stone<(t.cost.stone||0)){
+                alert('资源不足');
+                return;
+            }
+            game.spirit-=t.cost.spirit;
+            game.stone-=t.cost.stone||0;
+            game.queue='tech_'+i;
+            game.queueTime=t.time;
+        }
+        render();
     }
 
     function catchPet(){
-        if(game.spirit>=500){game.spirit-=500;game.pet=PETS[Math.floor(Math.random()*PETS.length)];game.pet.lv=1;}
-        render();
-    }
-
-    function enterDungeon(){
-        if(!game.dungeon)game.dungeon=Math.floor(Math.random()*DUNGEONS.length);
-        let d=DUNGEONS[game.dungeon];
-        if(getCombat()>=d.r){game.spirit+=d.r*10;alert('通关成功！获得'+d.reward);game.dungeon=null;}
-        else alert('战力不足！需要'+d.r+'战力');
+        let reqLevel=1+game.buildings.park*2;
+        if(game.spirit>=500 && !game.pet){
+            game.spirit-=500;
+            // 根据灵兽园等级解锁更高质量灵宠
+            let available=PETS.filter(p=>p.l<=reqLevel);
+            game.pet=available[Math.floor(Math.random()*available.length)];
+            game.pet.lv=1;
+        }
         render();
     }
 
@@ -207,47 +320,130 @@
     }
 
     function render(){
-        let realms = REALMS;
-        document.getElementById('realm').textContent=realms[game.realm];
-        document.getElementById('spirit').textContent=Math.floor(getSpirits()).toLocaleString();
-        document.getElementById('realm-text').textContent=realms[game.realm]+'期 第'+game.realmLv+'层';
+        document.getElementById('r-spirit').textContent=Math.floor(getNum(game.spirit));
+        document.getElementById('r-stone').textContent=Math.floor(getNum(game.stone));
+        document.getElementById('r-herb').textContent=Math.floor(getNum(game.herb));
+        document.getElementById('r-ore').textContent=Math.floor(getNum(game.ore));
         
+        document.getElementById('realm-text').textContent=REALMS[game.realm]+'期 第'+game.realmLv+'层';
         let need=getNeed();
-        document.getElementById('cultivation').textContent=Math.floor(getCult());
+        document.getElementById('cultivation').textContent=Math.floor(getNum(game.cult));
         document.getElementById('need').textContent=need;
-        document.getElementById('progress').style.width=(getCult()/need*100)+'%';
-        document.getElementById('rate').textContent=getRate().toFixed(1);
+        document.getElementById('progress').style.width=(getNum(game.cult)/need*100)+'%';
+        document.getElementById('rate').textContent=getProd().spirit.toFixed(1);
         
-        let elems=['金','木','水','火','土'];
-        document.getElementById('roots').innerHTML=elems.map((e,i)=>'<span class="root '+(getRoots()[i]>5?'active':'')+'">'+e+':'+getRoots()[i]+'</span>').join('');
+        let elems=ELEMS;
+        let roots=getRoots();
+        document.getElementById('roots').innerHTML=elems.map((e,i)=>
+            '<span class="root '+(roots[i]>5?'active':'')+'">'+e+':'+roots[i]+'</span>'
+        ).join('');
         
-        ['train','alchemy','forge','park','array'].forEach(b=>document.getElementById('b-'+b).textContent=game.sect[b]);
         document.getElementById('disciples').textContent=game.disciples;
-        document.getElementById('max-disciples').textContent=5+game.sect.train*2;
+        document.getElementById('max-disciples').textContent=game.maxDisciples;
+        document.getElementById('disciple-cost').textContent=game.disciples*10;
         
-        if(game.pet)document.getElementById('my-pet').innerHTML='<div style="font-size:3rem;">'+game.pet.i+'</div><p>'+game.pet.n+' Lv.'+game.pet.lv+'</p>';
-        
-        if(game.dungeon){
-            let d=DUNGEONS[game.dungeon];
-            document.getElementById('dungeon-name').textContent=d.n;
-            document.getElementById('dungeon-desc').textContent=d.d+' (需战力:'+d.r+')';
+        // 队列
+        if(game.queue){
+            document.getElementById('queue-info').textContent='('+game.queueTime.toFixed(0)+'秒)';
+            document.getElementById('queue-display').innerHTML='<div class="queue-item">升级中...</div>';
         }else{
-            document.getElementById('dungeon-name').textContent='今日已通关';
-            document.getElementById('dungeon-desc').textContent='请明天再来';
+            document.getElementById('queue-info').textContent='';
+            document.getElementById('queue-display').innerHTML='<div class="queue-item" style="color:#666;">无队列</div>';
         }
         
-        document.getElementById('tech-list').innerHTML=TECH.map((t,i)=>'<div class="tech-card" onclick="learnTech('+i+')"><div class="name">'+t.n+'</div><div class="desc">'+t.d+'</div><div class="cost">'+(game.tech[i]?'已学会':t.c+'灵气')+'</div></div>').join('');
+        // 建筑
+        let bHtml='';
+        for(let k in BUILDINGS){
+            let b=BUILDINGS[k];
+            let lv=game.buildings[k];
+            let can=canUpgrade(k);
+            let reqs=[];
+            for(let e in b.req)reqs.push(e+'灵根'+b.req[e]);
+            let cost=[];
+            if(b.res.stone)cost.push(b.res.stone+'灵石');
+            if(b.res.herb)cost.push(b.res.herb+'药材');
+            if(b.res.ore)cost.push(b.res.ore+'矿石');
+            
+            bHtml+='<div class="card"><h3>'+b.n+' Lv.'+lv+'</h3>';
+            bHtml+='<p style="font-size:0.8rem;color:#888;">'+b.desc+'</p>';
+            bHtml+='<p style="font-size:0.75rem;color:#666;">需要: '+reqs.join(',')+'</p>';
+            bHtml+='<p style="font-size:0.75rem;color:#e94560;">消耗: '+cost.join(',')+'</p>';
+            bHtml+='<p style="font-size:0.75rem;color:#00d4ff;">时间: '+Math.max(5,b.time/(1+game.disciples*0.2)).toFixed(0)+'秒</p>';
+            bHtml+='<button class="btn" style="margin-top:10px;" onclick="upgradeBuilding(\''+k+'\')" '+(can?'':'disabled')+'>'+(can?'升级':'灵根不足')+'</button></div>';
+        }
+        document.getElementById('building-list').innerHTML=bHtml;
+        
+        // 功法
+        let tHtml='';
+        TECHS.forEach((t,i)=>{
+            let learned=game.tech[i];
+            let lv=game.techLevel[i]||1;
+            let reqs=[];
+            if(t.req.level)reqs.push('境界'+t.req.level);
+            if(t.req.train)reqs.push('修炼殿'+t.req.train);
+            if(t.req.alchemy)reqs.push('炼丹房'+t.req.alchemy);
+            if(t.req.forge)reqs.push('炼器殿'+t.req.forge);
+            if(t.req.park)reqs.push('灵兽园'+t.req.park);
+            if(t.req.array)reqs.push('护山大阵'+t.req.array);
+            
+            tHtml+='<div class="card" onclick="learnTech('+i+')"><h3>'+t.n+' '+(learned?'Lv.'+lv:'')+'</h3>';
+            tHtml+='<p style="font-size:0.8rem;color:#888;">'+t.desc+'</p>';
+            if(!learned)tHtml+='<p style="font-size:0.75rem;color:#666;">需要: '+reqs.join(',')+'</p>';
+            tHtml+='<p style="font-size:0.75rem;color:#e94560;">'+(learned?(lv>=10?'满级':'升级:'+Math.floor(t.cost.spirit*Math.pow(1.5,t.time)*lv)+'灵气'):'学习:'+t.cost.spirit+'灵气')+'</p></div>';
+        });
+        document.getElementById('tech-list').innerHTML=tHtml;
+        
+        // 灵宠
+        if(game.pet){
+            let pb=game.pet.b;
+            document.getElementById('my-pet').innerHTML='<div style="font-size:3rem;">'+game.pet.i+'</div><p>'+game.pet.n+' Lv.'+game.pet.lv+'</p><p style="font-size:0.8rem;color:#888;">+'+(game.pet.a*game.pet.lv)+'攻击</p>';
+        }
+        
+        // 资源产出
+        let prod=getProd();
+        document.getElementById('p-spirit').textContent=prod.spirit.toFixed(1);
+        document.getElementById('p-stone').textContent=prod.stone.toFixed(1);
+        document.getElementById('p-herb').textContent=prod.herb.toFixed(1);
+        document.getElementById('p-ore').textContent=prod.ore.toFixed(1);
         
         save();
     }
 
+    // 主循环
     setInterval(()=>{
-        game.spirit+=getRate()/10;
+        let prod=getProd();
+        game.spirit+=prod.spirit/60;
+        game.stone+=prod.stone/60;
+        game.herb+=prod.herb/60;
+        game.ore+=prod.ore/60;
+        
         game.cult+=game.rootLv*0.1;
-        if(game.cult>=getNeed()){game.cult=0;if(game.realmLv<10)game.realmLv++;else if(game.realm<9){game.realm++;game.realmLv=1;}}
-        if(game.mission){game.missionTime--;if(game.missionTime<=0){game.spirit+={easy:100,normal:500,hard:2000}[game.mission];game.mission=null;document.getElementById('mission-status').textContent='任务完成！';}}
+        if(getNum(game.cult)>=getNeed()){
+            game.cult=0;
+            if(game.realmLv<10)game.realmLv++;
+            else if(game.realm<9){game.realm++;game.realmLv=1;}
+        }
+        
+        // 弟子消耗
+        game.spirit-=game.disciples*10/60;
+        
+        // 队列
+        if(game.queue){
+            game.queueTime-=1/60;
+            if(game.queueTime<=0){
+                if(game.queue.startsWith('tech_')){
+                    let i=parseInt(game.queue.split('_')[1]);
+                    if(game.tech[i])game.techLevel[i]++;
+                    else{game.tech[i]=true;game.techLevel[i]=1;}
+                }else{
+                    game.buildings[game.queue]++;
+                }
+                game.queue=null;
+            }
+        }
+        
         render();
-    },100);
+    },1000);
 
     setInterval(save,10000);
     load();
