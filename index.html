@@ -48,9 +48,9 @@
                 <div class="card">
                     <h3>🌾 灵田产出</h3>
                     <p style="font-size:0.8rem;color:#888;">弟子在灵田中劳作产出资源</p>
-                    <div class="res-item"><span>灵石</span><span>+<span id="p-stone">0</span>/分</span></div>
-                    <div class="res-item"><span>药材</span><span>+<span id="p-herb">0</span>/分</span></div>
-                    <div class="res-item"><span>矿石</span><span>+<span id="p-ore">0</span>/分</span></div>
+                    <div class="res-item"><span>灵石</span><span>+<span id="f-stone">0</span>/分</span></div>
+                    <div class="res-item"><span>药材</span><span>+<span id="f-herb">0</span>/分</span></div>
+                    <div class="res-item"><span>矿石</span><span>+<span id="f-ore">0</span>/分</span></div>
                     <p style="font-size:0.75rem;color:#666;margin-top:8px;">灵田等级: <span id="field-level">1</span> | 劳作弟子: <span id="field-workers">1</span></p>
                     <div style="display:flex;gap:8px;margin-top:10px;">
                         <button class="btn" style="flex:1;" onclick="assignDisciple(1)">+1弟子</button>
@@ -505,6 +505,15 @@
         document.getElementById('p-stone').textContent=prod.stone.toFixed(1);
         document.getElementById('p-herb').textContent=prod.herb.toFixed(1);
         document.getElementById('p-ore').textContent=prod.ore.toFixed(1);
+        
+        // 灵田产出 (单独显示)
+        let fieldLv = game.buildings.field || 1;
+        let fStone = game.fieldWorkers * Math.floor(1 * Math.pow(1.2, fieldLv));
+        let fHerb = game.fieldWorkers * Math.floor(0.5 * Math.pow(1.2, fieldLv));
+        let fOre = game.fieldWorkers * Math.floor(0.3 * Math.pow(1.2, fieldLv));
+        document.getElementById('f-stone').textContent = fStone.toFixed(1);
+        document.getElementById('f-herb').textContent = fHerb.toFixed(1);
+        document.getElementById('f-ore').textContent = fOre.toFixed(1);
         
         save();
     }
