@@ -36,6 +36,10 @@
                     <div class="progress-bar"><div id="progress" class="progress-fill" style="width:0%"></div></div>
                     <p><span id="cultivation">0</span> / <span id="need">100</span></p>
                     <p style="font-size:0.75rem;color:#666;margin-top:5px;">当前境界升级需要 <span id="realm-need">100</span> 灵气</p>
+                    <div id="break-progress" class="progress-bar" style="display:none;margin-top:8px;">
+                        <div id="break-progress-fill" class="progress-fill" style="width:0%"></div>
+                    </div>
+                    <p id="break-status" style="font-size:0.75rem;color:#e94560;margin-top:5px;display:none;">突破中... <span id="break-time">0</span>秒</p>
                 </div>
                 <div class="card">
                     <h3>🧘 打坐修炼</h3>
@@ -148,6 +152,7 @@
     let game = {
         spirit:0, stone:0, herb:0, ore:0,
         realm:0, realmLv:1, cult:0,
+        realmBreaking:false, realmBreakTime:0,
         roots:[1,1,1,1,1], rootLv:1,
         buildings:{field:1,train:0,alchemy:0,forge:0,park:0,array:0,queue:0},
         disciples:1, maxDisciples:5,
@@ -410,7 +415,20 @@
         document.getElementById('cultivation').textContent=Math.floor(getNum(game.cult));
         document.getElementById('need').textContent=need;
         document.getElementById('realm-need').textContent=need;
-        document.getElementById('progress').style.width=(getNum(game.cult)/need*100)+'%';
+        
+        if(game.realmBreaking){
+            let maxTime = (10 + game.realm * 5) * (1 + game.realmLv * 0.3);
+            let pct = (1 - game.realmBreakTime / maxTime) * 100;
+            document.getElementById('progress').style.width=pct+'%';
+            document.getElementById('break-progress').style.display='block';
+            document.getElementById('break-progress-fill').style.width=pct+'%';
+            document.getElementById('break-status').style.display='block';
+            document.getElementById('break-time').textContent=Math.ceil(game.realmBreakTime);
+        }else{
+            document.getElementById('progress').style.width=(getNum(game.cult)/need*100)+'%';
+            document.getElementById('break-progress').style.display='none';
+            document.getElementById('break-status').style.display='none';
+        }
         document.getElementById('rate').textContent=getProd().spirit.toFixed(1);
         document.getElementById('meditate-gain').textContent=1+Math.floor(game.meditateTimes/10)+game.disciples;
         
@@ -534,10 +552,22 @@
         game.ore+=prod.ore/10;
         
         game.cult+=game.rootLv*0.1;
-        if(getNum(game.cult)>=getNeed()){
-            game.cult=0;
-            if(game.realmLv<10)game.realmLv++;
-            else if(game.realm<9){game.realm++;game.realmLv=1;}
+        // 境界突破
+        if(game.realmBreaking){
+            game.realmBreakTime -= 0.1;
+            if(game.realmBreakTime <= 0){
+                game.realmBreaking = false;
+                if(game.realmLv<10)game.realmLv++;
+                else if(game.realm<9){game.realm++;game.realmLv=1;}
+                game.cult = 0;
+                alert('境界突破成功！进入 '+REALMS[game.realm]+'期 第'+game.realmLv+'层');
+            }
+        }else if(getNum(game.cult)>=getNeed()){
+            // 突破需要时间，越高境界越久
+            let breakTime = (10 + game.realm * 5) * (1 + game.realmLv * 0.3);
+            game.realmBreaking = true;
+            game.realmBreakTime = breakTime;
+        }
         }
         
         // 弟子消耗 (每0.1秒)
