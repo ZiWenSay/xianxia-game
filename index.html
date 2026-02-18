@@ -213,6 +213,16 @@
             let d=localStorage.getItem('xianxia_v4');
             if(d){
                 let saved=JSON.parse(d);
+                // 检查存档是否有效（必须有spirit等基本字段）
+                if(!saved.spirit && saved.spirit !== 0){
+                    d = null; // 无效存档
+                }
+            }
+            if(!d){
+                // 无效存档，重新开始
+                init();
+                save();
+            }else{
                 // 确保所有字段都正确加载
                 game.spirit = getNum(saved.spirit);
                 game.stone = getNum(saved.stone);
@@ -255,8 +265,8 @@
                         alert('离线收益: 灵石+'+Math.floor(stone)+' 药材+'+Math.floor(herb)+' 矿石+'+Math.floor(ore)+' 灵气+'+Math.floor(netSpirit));
                     }
                 }
-            }else init();
-        }catch(e){init();}
+            }
+            }catch(e){init();}
     }
 
     function save(){game.lastSave=Date.now();localStorage.setItem('xianxia_v4',JSON.stringify(game));}
@@ -589,7 +599,6 @@
             let breakTime = (10 + game.realm * 5) * (1 + game.realmLv * 0.3);
             game.realmBreaking = true;
             game.realmBreakTime = breakTime;
-        }
         }
         
         // 弟子消耗 (每0.1秒)
