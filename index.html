@@ -209,64 +209,56 @@
     function getRoots(){return (game.roots||[1,1,1,1,1]).map(r=>getNum(r));}
 
     function load(){
-        try{
-            let d=localStorage.getItem('xianxia_v4');
-            if(d){
-                let saved=JSON.parse(d);
-                // 检查存档是否有效（必须有spirit等基本字段）
-                if(!saved.spirit && saved.spirit !== 0){
-                    d = null; // 无效存档
-                }
+        let d=localStorage.getItem('xianxia_v4');
+        if(!d){
+            init();
+            return;
+        }
+        let saved=JSON.parse(d);
+        if(typeof saved.spirit !== 'number'){
+            init();
+            return;
+        }
+        // 确保所有字段都正确加载
+        game.spirit = getNum(saved.spirit);
+        game.stone = getNum(saved.stone);
+        game.herb = getNum(saved.herb);
+        game.ore = getNum(saved.ore);
+        game.realm = getNum(saved.realm);
+        game.realmLv = getNum(saved.realmLv);
+        game.cult = getNum(saved.cult);
+        game.disciples = getNum(saved.disciples) || 1;
+        game.fieldWorkers = getNum(saved.fieldWorkers) || 1;
+        game.realmBreaking = saved.realmBreaking || false;
+        game.realmBreakTime = getNum(saved.realmBreakTime);
+        game.roots = (saved.roots || [1,1,1,1,1]).map(r=>getNum(r));
+        game.buildings = saved.buildings || {field:1,train:0,alchemy:0,forge:0,park:0,array:0,queue:0};
+        if(game.buildings.field === undefined) game.buildings.field = 1;
+        game.tech = saved.tech || {0:true};
+        game.techLevel = saved.techLevel || {0:1};
+        game.queues = saved.queues || [];
+        game.pet = saved.pet;
+        game.rootLv = getNum(saved.rootLv);
+        game.meditateTimes = getNum(saved.meditateTimes);
+        game.lastSave = saved.lastSave || Date.now();
+        
+        let offline=(Date.now()-game.lastSave)/1000;
+        if(offline>60){
+            let fieldLv = game.buildings.field || 1;
+            let stone = game.fieldWorkers * Math.floor(1 * Math.pow(1.2, fieldLv)) * offline * 0.1;
+            let herb = game.fieldWorkers * Math.floor(0.5 * Math.pow(1.2, fieldLv)) * offline * 0.1;
+            let ore = game.fieldWorkers * Math.floor(0.3 * Math.pow(1.2, fieldLv)) * offline * 0.1;
+            game.stone += stone;
+            game.herb += herb;
+            game.ore += ore;
+            let fieldSpirit = game.fieldWorkers * Math.floor(1 * Math.pow(1.2, fieldLv)) * offline * 0.1;
+            let cost = (game.disciples - game.fieldWorkers) * 10 * offline;
+            let netSpirit = fieldSpirit - cost;
+            if(netSpirit > 0){
+                game.spirit += netSpirit;
+                alert('离线收益: 灵石+'+Math.floor(stone)+' 药材+'+Math.floor(herb)+' 矿石+'+Math.floor(ore)+' 灵气+'+Math.floor(netSpirit));
             }
-            if(!d){
-                // 无效存档，重新开始
-                init();
-                save();
-            }else{
-                // 确保所有字段都正确加载
-                game.spirit = getNum(saved.spirit);
-                game.stone = getNum(saved.stone);
-                game.herb = getNum(saved.herb);
-                game.ore = getNum(saved.ore);
-                game.realm = getNum(saved.realm);
-                game.realmLv = getNum(saved.realmLv);
-                game.cult = getNum(saved.cult);
-                game.disciples = getNum(saved.disciples) || 1;
-                game.fieldWorkers = getNum(saved.fieldWorkers) || 1;
-                game.realmBreaking = saved.realmBreaking || false;
-                game.realmBreakTime = getNum(saved.realmBreakTime);
-                game.roots = (saved.roots || [1,1,1,1,1]).map(r=>getNum(r));
-                game.buildings = saved.buildings || {field:1,train:0,alchemy:0,forge:0,park:0,array:0,queue:0};
-                if(game.buildings.field === undefined) game.buildings.field = 1;
-                game.tech = saved.tech || {0:true};
-                game.techLevel = saved.techLevel || {0:1};
-                game.queues = saved.queues || [];
-                game.pet = saved.pet;
-                game.rootLv = getNum(saved.rootLv);
-                game.meditateTimes = getNum(saved.meditateTimes);
-                game.lastSave = saved.lastSave || Date.now();
-                
-                let offline=(Date.now()-game.lastSave)/1000;
-                if(offline>60){
-                    // 离线只算灵田产出的所有资源
-                    let fieldLv = game.buildings.field || 1;
-                    let stone = game.fieldWorkers * Math.floor(1 * Math.pow(1.2, fieldLv)) * offline * 0.1;
-                    let herb = game.fieldWorkers * Math.floor(0.5 * Math.pow(1.2, fieldLv)) * offline * 0.1;
-                    let ore = game.fieldWorkers * Math.floor(0.3 * Math.pow(1.2, fieldLv)) * offline * 0.1;
-                    game.stone += stone;
-                    game.herb += herb;
-                    game.ore += ore;
-                    // 灵气扣除弟子消耗
-                    let fieldSpirit = game.fieldWorkers * Math.floor(1 * Math.pow(1.2, fieldLv)) * offline * 0.1;
-                    let cost = (game.disciples - game.fieldWorkers) * 10 * offline;
-                    let netSpirit = fieldSpirit - cost;
-                    if(netSpirit > 0){
-                        game.spirit += netSpirit;
-                        alert('离线收益: 灵石+'+Math.floor(stone)+' 药材+'+Math.floor(herb)+' 矿石+'+Math.floor(ore)+' 灵气+'+Math.floor(netSpirit));
-                    }
-                }
-            }
-            }catch(e){init();}
+        }
     }
 
     function save(){game.lastSave=Date.now();localStorage.setItem('xianxia_v4',JSON.stringify(game));}
