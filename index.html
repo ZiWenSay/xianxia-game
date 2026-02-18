@@ -207,12 +207,10 @@
                 
                 let offline=(Date.now()-game.lastSave)/1000;
                 if(offline>60){
-                    // 离线只获得灵气产出（不含资源产出）
-                    let baseSpirit = (game.realm+1)*game.realmLv;
-                    let roots = getRoots();
-                    baseSpirit *= (1 + roots.reduce((a,b)=>a+b,0) * 0.1);
-                    // 灵气产出只有10%离线收益
-                    let netGain = baseSpirit * offline * 0.1;
+                    // 离线只算灵田产出的灵气
+                    let fieldLv = game.buildings.field || 1;
+                    let fieldSpirit = game.fieldWorkers * Math.floor(1 * Math.pow(1.2, fieldLv));
+                    let netGain = fieldSpirit * offline * 0.1;
                     // 扣除弟子消耗
                     let cost = (game.disciples - game.fieldWorkers) * 10 * offline;
                     netGain -= cost;
