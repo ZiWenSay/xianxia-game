@@ -417,12 +417,13 @@
         document.getElementById('disciple-cost').textContent=(game.disciples - game.fieldWorkers)*10;
         
         // 灵田
-        document.getElementById('field-level').textContent=game.buildings.field || 1;
+        document.getElementById('field-level').textContent=(game.buildings && game.buildings.field) || 1;
         document.getElementById('field-workers').textContent=game.fieldWorkers;
         
-        // 建筑
+        // 建筑 (灵田不显示在建筑列表中)
         let bHtml='';
         for(let k in BUILDINGS){
+            if(k === 'field') continue; // 灵田在首页显示
             let b=BUILDINGS[k];
             let lv=game.buildings[k];
             let can=canUpgrade(k);
