@@ -37,8 +37,21 @@
                     <p><span id="cultivation">0</span> / <span id="need">100</span></p>
                 </div>
                 <div class="card">
+                    <h3>🧘 打坐修炼</h3>
+                    <p>手动修炼获得灵气</p>
+                    <button class="btn btn-primary" style="margin-top:10px;" onclick="meditate()">打坐 (+<span id="meditate-gain">1</span>灵气)</button>
+                </div>
+                <div class="card">
                     <h3>⛺ 闭关修炼</h3>
-                    <p>每秒 +<span id="rate">1</span> 灵气</p>
+                    <p>自动获得: +<span id="rate">1</span> 灵气/秒</p>
+                </div>
+                <div class="card">
+                    <h3>⛏️ 采集资源</h3>
+                    <div style="display:flex;gap:8px;margin-top:10px;">
+                        <button class="btn" style="flex:1;background:#2a1a4a;" onclick="gather('stone')">挖矿<br><small>+10灵石</small></button>
+                        <button class="btn" style="flex:1;background:#1a3a2a;" onclick="gather('herb')">采药<br><small>+10药材</small></button>
+                        <button class="btn" style="flex:1;background:#3a2a1a;" onclick="gather('ore')">采矿<br><small>+10矿石</small></button>
+                    </div>
                 </div>
                 <div class="card">
                     <h3>🌿 灵根</h3>
@@ -137,13 +150,36 @@
         tech:{}, techLevel:{},
         pet:null,
         queue:null, queueTime:0,
-        lastSave:Date.now()
+        lastSave:Date.now(),
+        meditateTimes:0
     };
 
     // 初始化
     function init(){
         game.tech[0]=true; // 引气诀免费送
         game.techLevel[0]=1;
+        // 初始资源
+        game.spirit=50;
+        game.stone=50;
+        game.herb=20;
+        game.ore=20;
+    }
+
+    function meditate(){
+        // 打坐获得灵气，次数越多效率越高
+        let gain=1+Math.floor(game.meditateTimes/10)+game.disciples;
+        game.spirit+=gain;
+        game.meditateTimes++;
+        render();
+    }
+
+    function gather(type){
+        // 采集资源
+        let amount=10+game.disciples;
+        if(type==='stone')game.stone+=amount;
+        else if(type==='herb')game.herb+=amount;
+        else if(type==='ore')game.ore+=amount;
+        render();
     }
 
     function getNum(v){return Number(v)||0;}
@@ -331,6 +367,7 @@
         document.getElementById('need').textContent=need;
         document.getElementById('progress').style.width=(getNum(game.cult)/need*100)+'%';
         document.getElementById('rate').textContent=getProd().spirit.toFixed(1);
+        document.getElementById('meditate-gain').textContent=1+Math.floor(game.meditateTimes/10)+game.disciples;
         
         let elems=ELEMS;
         let roots=getRoots();
