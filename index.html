@@ -147,7 +147,7 @@
         spirit:0, stone:0, herb:0, ore:0,
         realm:0, realmLv:1, cult:0,
         roots:[1,1,1,1,1], rootLv:1,
-        buildings:{train:0,alchemy:0,forge:0,park:0,array:0},
+        buildings:{train:0,alchemy:0,forge:0,park:0,array:0,queue:0},
         disciples:1, maxDisciples:5,
         fieldWorkers:1, // 灵田劳作弟子
         tech:{}, techLevel:{},
@@ -198,7 +198,7 @@
                 // 修复
                 ['spirit','stone','herb','ore','realm','realmLv','cult','disciples'].forEach(k=>game[k]=getNum(game[k]));
                 game.roots=getRoots();
-                if(!game.buildings)game.buildings={train:0,alchemy:0,forge:0,park:0,array:0};
+                if(!game.buildings)game.buildings={train:0,alchemy:0,forge:0,park:0,array:0,queue:0};
                 if(!game.tech)game.tech={0:true};
                 if(!game.techLevel)game.techLevel={0:1};
                 
