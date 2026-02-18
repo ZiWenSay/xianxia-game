@@ -173,6 +173,17 @@
         game.stone=50;
         game.herb=30;
         game.ore=30;
+        // 境界
+        game.realm = 0;
+        game.realmLv = 1;
+        game.cult = 0;
+        game.realmBreaking = false;
+        game.realmBreakTime = 0;
+        // 弟子
+        game.disciples = 1;
+        game.fieldWorkers = 1;
+        // 建筑
+        game.buildings = {field:1,train:0,alchemy:0,forge:0,park:0,array:0,queue:0};
     }
 
     // 分配弟子到灵田
@@ -202,19 +213,28 @@
             let d=localStorage.getItem('xianxia_v4');
             if(d){
                 let saved=JSON.parse(d);
-                game={...game,...saved};
-                // 修复
-                ['spirit','stone','herb','ore','realm','realmLv','cult','disciples'].forEach(k=>game[k]=getNum(game[k]));
-                game.disciples = game.disciples || 1;
-                game.fieldWorkers = game.fieldWorkers || 1;
-                game.realmBreaking = game.realmBreaking || false;
-                game.realmBreakTime = game.realmBreakTime || 0;
-                game.roots=getRoots();
-                if(!game.buildings)game.buildings={field:1,train:0,alchemy:0,forge:0,park:0,array:0,queue:0};
+                // 确保所有字段都正确加载
+                game.spirit = getNum(saved.spirit);
+                game.stone = getNum(saved.stone);
+                game.herb = getNum(saved.herb);
+                game.ore = getNum(saved.ore);
+                game.realm = getNum(saved.realm);
+                game.realmLv = getNum(saved.realmLv);
+                game.cult = getNum(saved.cult);
+                game.disciples = getNum(saved.disciples) || 1;
+                game.fieldWorkers = getNum(saved.fieldWorkers) || 1;
+                game.realmBreaking = saved.realmBreaking || false;
+                game.realmBreakTime = getNum(saved.realmBreakTime);
+                game.roots = (saved.roots || [1,1,1,1,1]).map(r=>getNum(r));
+                game.buildings = saved.buildings || {field:1,train:0,alchemy:0,forge:0,park:0,array:0,queue:0};
                 if(game.buildings.field === undefined) game.buildings.field = 1;
-                if(!game.tech)game.tech={0:true};
-                if(!game.techLevel)game.techLevel={0:1};
-                if(!game.queues)game.queues=[];
+                game.tech = saved.tech || {0:true};
+                game.techLevel = saved.techLevel || {0:1};
+                game.queues = saved.queues || [];
+                game.pet = saved.pet;
+                game.rootLv = getNum(saved.rootLv);
+                game.meditateTimes = getNum(saved.meditateTimes);
+                game.lastSave = saved.lastSave || Date.now();
                 
                 let offline=(Date.now()-game.lastSave)/1000;
                 if(offline>60){
