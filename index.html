@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/mobile.css?v=9">
 </head>
 <body>
+    <div id="toast" class="toast"></div>
     <div class="game-wrap">
         <header class="header">
             <h1>问道长生</h1>
@@ -207,6 +208,19 @@
 
     function getNum(v){return Number(v)||0;}
     function getRoots(){return (game.roots||[1,1,1,1,1]).map(r=>getNum(r));}
+    
+    // 弹出式提醒
+    function toast(msg){
+        let t=document.getElementById('toast');
+        t.textContent=msg;
+        t.style.display='block';
+        t.style.opacity='1';
+        setTimeout(()=>{
+            t.style.transition='opacity 2s';
+            t.style.opacity='0';
+            setTimeout(()=>t.style.display='none',2000);
+        },2000);
+    }
 
     function load(){
         let d=localStorage.getItem('xianxia_v4');
@@ -256,7 +270,7 @@
             let netSpirit = fieldSpirit - cost;
             if(netSpirit > 0){
                 game.spirit += netSpirit;
-                alert('离线收益: 灵石+'+Math.floor(stone)+' 药材+'+Math.floor(herb)+' 矿石+'+Math.floor(ore)+' 灵气+'+Math.floor(netSpirit));
+                toast('离线收益: 灵石+'+Math.floor(stone)+' 药材+'+Math.floor(herb)+' 矿石+'+Math.floor(ore)+' 灵气+'+Math.floor(netSpirit));
             }
         }
     }
@@ -318,7 +332,7 @@
 
     function upgradeBuilding(type){
         let maxQueue = 1 + (game.buildings.queue || 0);
-        if(game.queues.length >= maxQueue){alert('队列已满！枢机房 Lv.'+game.buildings.queue+' 最多'+maxQueue+'个队列');return;}
+        if(game.queues.length >= maxQueue){toast('队列已满！枢机房 Lv.'+game.buildings.queue+' 最多'+maxQueue+'个队列');return;}
         let b=BUILDINGS[type];
         let lv = game.buildings[type] || 0;
         let roots=getRoots();
@@ -330,12 +344,12 @@
             if(roots[ei]<b.req[e]){can=false;reqArr.push(e+'灵根'+b.req[e]+'级');}
         }
         if(!can){
-            alert('需要: '+reqArr.join(','));
+            toast('需要: '+reqArr.join(','));
             return;
         }
         // 检查资源
         if(game.stone<(b.res.stone||0)||game.herb<(b.res.herb||0)||game.ore<(b.res.ore||0)){
-            alert('资源不足！');
+            toast('资源不足！');
             return;
         }
         // 扣除资源
@@ -357,7 +371,7 @@
             game.rootLv++;
             game.roots[Math.floor(Math.random()*5)]++;
         }else{
-            alert('灵气不足！需要 '+cost+' 灵气，当前 '+Math.floor(game.spirit)+'，差 '+(cost-Math.floor(game.spirit)));
+            toast('灵气不足！需要 '+cost+' 灵气，当前 '+Math.floor(game.spirit)+'，差 '+(cost-Math.floor(game.spirit)));
         }
         render();
     }
@@ -374,32 +388,32 @@
 
     function learnTech(i){
         let maxQueue = 1 + (game.buildings.queue || 0);
-        if(game.queues.length >= maxQueue){alert('队列已满！');return;}
+        if(game.queues.length >= maxQueue){toast('队列已满！');return;}
         
         if(game.tech[i]){
             // 升级
             let t=TECHS[i];
-            if(game.techLevel[i]>=10){alert('已满级！');return;}
+            if(game.techLevel[i]>=10){toast('已满级！');return;}
             let cost=Math.floor(t.cost.spirit*Math.pow(1.5,t.time)*game.techLevel[i]);
             if(game.spirit>=cost){
                 game.spirit-=cost;
                 game.queues.push({type:'tech_'+i, time:t.time, maxTime:t.time});
-            }else{alert('灵气不足！');}
+            }else{toast('灵气不足！');}
         }else{
             // 学习
             let t=TECHS[i];
             // 检查条件
             if(game.realmLv<t.req.level){
-                alert('境界不足，需要'+t.req.level+'层');
+                toast('境界不足，需要'+t.req.level+'层');
                 return;
             }
             if(t.req.train && game.buildings.train<t.req.train){
-                alert('修炼殿等级不足');
+                toast('修炼殿等级不足');
                 return;
             }
             // 检查资源
             if(game.spirit<t.cost.spirit || game.stone<(t.cost.stone||0)){
-                alert('资源不足');
+                toast('资源不足');
                 return;
             }
             game.spirit-=t.cost.spirit;
@@ -584,7 +598,7 @@
                 if(game.realmLv<10)game.realmLv++;
                 else if(game.realm<9){game.realm++;game.realmLv=1;}
                 game.cult = 0;
-                alert('境界突破成功！进入 '+REALMS[game.realm]+'期 第'+game.realmLv+'层');
+                toast('境界突破成功！进入 '+REALMS[game.realm]+'期 第'+game.realmLv+'层');
             }
         }else if(getNum(game.cult)>=getNeed()){
             // 突破需要时间，越高境界越久
