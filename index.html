@@ -291,7 +291,10 @@
         game.herb-=b.res.herb||0;
         game.ore-=b.res.ore||0;
         // 开始升级
-        game.queues.push({type:type, time:Math.max(5, b.time / (1+game.disciples*0.2)), maxTime:Math.max(5, b.time / (1+game.disciples*0.2))});
+        // 升级时间 = 基础时间 × (1 + 当前等级 × 0.5) / 弟子加成
+        let levelMult = 1 + lv * 0.5;
+        let upgradeTime = Math.max(5, b.time * levelMult / (1+game.disciples*0.2));
+        game.queues.push({type:type, time:upgradeTime, maxTime:upgradeTime});
         render();
     }
 
@@ -432,7 +435,8 @@
             
             // 检查是否正在升级这个建筑
             let q = game.queues.find(q => q.type === k);
-            let maxTime = Math.max(5,b.time/(1+game.disciples*0.2));
+            let levelMult = 1 + lv * 0.5;
+            let maxTime = Math.max(5, b.time * levelMult / (1+game.disciples*0.2));
             let progressPct = q ? (1 - q.time / q.maxTime) * 100 : 0;
             
             bHtml+='<div class="card"><h3>'+b.n+' Lv.'+lv+(q?' ⏳':'')+'</h3>';
