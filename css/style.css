@@ -629,3 +629,66 @@ body::before {
     background: var(--secondary);
     border-radius: 2px;
 }
+
+/* 新增样式 */
+.roots-section, .progress-section, .stats-section {
+    background: var(--bg-card);
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.roots-section h3, .progress-section h3, .stats-section h3 {
+    font-size: 0.95rem;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.stat-box {
+    background: var(--bg-panel);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: block;
+}
+
+.stat-value {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--accent);
+    display: block;
+    margin-top: 4px;
+}
+
+.stat-value.gold {
+    color: var(--gold);
+}
+
+.log-content {
+    max-height: 200px;
+    overflow-y: auto;
+    background: var(--bg-card);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+
+.log-content p {
+    padding: 4px 0;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.log-content p:last-child {
+    border-bottom: none;
+}
