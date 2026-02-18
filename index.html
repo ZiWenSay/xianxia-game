@@ -414,17 +414,32 @@
             let can=canUpgrade(k);
             let reqs=[];
             for(let e in b.req)reqs.push(e+'灵根'+b.req[e]);
-            let cost=[];
-            if(b.res.stone)cost.push(b.res.stone+'灵石');
-            if(b.res.herb)cost.push(b.res.herb+'药材');
-            if(b.res.ore)cost.push(b.res.ore+'矿石');
+            // 检查资源是否足够
+            let canRes = true;
+            let costHtml = [];
+            if(b.res.stone){
+                let have = game.stone, need = b.res.stone;
+                costHtml.push('<span style="color:'+(have>=need?'#fff':'#e94560')+'">'+need+'灵石</span>');
+                if(have<need)canRes=false;
+            }
+            if(b.res.herb){
+                let have = game.herb, need = b.res.herb;
+                costHtml.push('<span style="color:'+(have>=need?'#fff':'#e94560')+'">'+need+'药材</span>');
+                if(have<need)canRes=false;
+            }
+            if(b.res.ore){
+                let have = game.ore, need = b.res.ore;
+                costHtml.push('<span style="color:'+(have>=need?'#fff':'#e94560')+'">'+need+'矿石</span>');
+                if(have<need)canRes=false;
+            }
             
             bHtml+='<div class="card"><h3>'+b.n+' Lv.'+lv+'</h3>';
             bHtml+='<p style="font-size:0.8rem;color:#888;">'+b.desc+'</p>';
             bHtml+='<p style="font-size:0.75rem;color:#666;">需要: '+reqs.join(',')+'</p>';
-            bHtml+='<p style="font-size:0.75rem;color:#e94560;">消耗: '+cost.join(',')+'</p>';
+            bHtml+='<p style="font-size:0.75rem;">消耗: '+costHtml.join(', ')+'</p>';
             bHtml+='<p style="font-size:0.75rem;color:#00d4ff;">时间: '+Math.max(5,b.time/(1+game.disciples*0.2)).toFixed(0)+'秒</p>';
-            bHtml+='<button class="btn" style="margin-top:10px;" onclick="upgradeBuilding(\''+k+'\')" '+(can?'':'disabled')+'>'+(can?'升级':'灵根不足')+'</button></div>';
+            let canAll = can && canRes;
+            bHtml+='<button class="btn" style="margin-top:10px;" onclick="upgradeBuilding(\''+k+'\')" '+(canAll?'':'disabled')+'>'+(canAll?'升级':(can?'资源不足':'灵根不足'))+'</button></div>';
         }
         document.getElementById('building-list').innerHTML=bHtml;
         
