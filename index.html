@@ -2,12 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>问道长生 - 仙侠放置</title>
-    <link rel="stylesheet" href="css/mobile.css?v=4">
-    <style>
-        .btn:active { transform: scale(0.95); }
-    </style>
+    <link rel="stylesheet" href="css/mobile.css?v=5">
 </head>
 <body>
     <div class="game-wrap">
@@ -26,13 +23,13 @@
         </header>
 
         <nav class="nav">
-            <button class="nav-btn active" data-tab="cultivation" onclick="switchTab('cultivation')">修炼</button>
-            <button class="nav-btn" data-tab="techniques" onclick="switchTab('techniques')">功法</button>
-            <button class="nav-btn" data-tab="artifacts" onclick="switchTab('artifacts')">法宝</button>
-            <button class="nav-btn" data-tab="pets" onclick="switchTab('pets')">灵宠</button>
-            <button class="nav-btn" data-tab="sect" onclick="switchTab('sect')">宗门</button>
-            <button class="nav-btn" data-tab="boss" onclick="switchTab('boss')">BOSS</button>
-            <button class="nav-btn" data-tab="shop" onclick="switchTab('shop')">商店</button>
+            <button class="nav-btn active" data-tab="cultivation" onclick="showTab('cultivation')">修炼</button>
+            <button class="nav-btn" data-tab="techniques" onclick="showTab('techniques')">功法</button>
+            <button class="nav-btn" data-tab="artifacts" onclick="showTab('artifacts')">法宝</button>
+            <button class="nav-btn" data-tab="pets" onclick="showTab('pets')">灵宠</button>
+            <button class="nav-btn" data-tab="sect" onclick="showTab('sect')">宗门</button>
+            <button class="nav-btn" data-tab="boss" onclick="showTab('boss')">BOSS</button>
+            <button class="nav-btn" data-tab="shop" onclick="showTab('shop')">商店</button>
         </nav>
 
         <main class="content">
@@ -44,40 +41,40 @@
                 </div>
                 <div class="progress-section">
                     <h3>📈 修炼进度</h3>
-                    <div class="progress-bar"><div id="cultivation-progress-bar" class="progress-fill"></div></div>
-                    <p><span id="current-cultivation">0</span> / <span id="required-cultivation">100</span></p>
+                    <div class="progress-bar"><div id="progress-bar" class="progress-fill" style="width:0%"></div></div>
+                    <p><span id="cultivation">0</span> / <span id="required">100</span></p>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-primary" onclick="doCultivate()">🧘 修炼</button>
-                    <button class="btn btn-warning" onclick="doBreakthrough()">⚡ 突破</button>
+                    <button class="btn btn-primary" onclick="cultivate()">🧘 修炼</button>
+                    <button class="btn btn-warning" onclick="breakthrough()">⚡ 突破</button>
                 </div>
                 <div class="upgrade-section">
                     <h3>⬆️ 升级</h3>
                     <div class="upgrade-item">
-                        <span class="name">灵根等级 Lv.<span id="root-level">1</span></span>
-                        <button class="btn btn-primary" onclick="doUpgradeRoot()">升级</button>
+                        <span class="name">灵根 Lv.<span id="root-lv">1</span></span>
+                        <button class="btn btn-primary" onclick="upgradeRoot()">升级</button>
                     </div>
                     <div class="upgrade-item">
-                        <span class="name">修炼效率 Lv.<span id="efficiency-level">1</span></span>
-                        <button class="btn btn-primary" onclick="doUpgradeEfficiency()">升级</button>
+                        <span class="name">效率 Lv.<span id="eff-lv">1</span></span>
+                        <button class="btn btn-primary" onclick="upgradeEff()">升级</button>
                     </div>
                 </div>
             </section>
 
             <section id="techniques-panel" class="panel">
                 <h2>📚 功法</h2>
-                <div id="techniques-list" class="tech-grid"></div>
+                <div id="tech-list" class="tech-grid"></div>
             </section>
 
             <section id="artifacts-panel" class="panel">
                 <h2>⚔️ 法宝</h2>
                 <div class="artifact-slots">
-                    <div class="artifact-slot"><span class="label">武器</span><span class="name" id="slot-weapon">未装备</span></div>
-                    <div class="artifact-slot"><span class="label">防具</span><span class="name" id="slot-armor">未装备</span></div>
-                    <div class="artifact-slot"><span class="label">饰品</span><span class="name" id="slot-accessory">未装备</span></div>
+                    <div class="artifact-slot"><span class="label">武器</span><span class="name" id="slot-w">未装备</span></div>
+                    <div class="artifact-slot"><span class="label">防具</span><span class="name" id="slot-a">未装备</span></div>
+                    <div class="artifact-slot"><span class="label">饰品</span><span class="name" id="slot-s">未装备</span></div>
                 </div>
-                <button class="btn btn-primary" style="margin-bottom:15px;width:100%;" onclick="doCraft()">🔨 炼制法宝</button>
-                <div id="artifacts-inventory" class="tech-grid"></div>
+                <button class="btn btn-primary" style="margin-bottom:15px;width:100%;" onclick="craft()">🔨 炼制</button>
+                <div id="artifact-list" class="tech-grid"></div>
             </section>
 
             <section id="pets-panel" class="panel">
@@ -85,90 +82,266 @@
                 <div class="pet-card">
                     <div class="pet-icon" id="pet-icon">🥚</div>
                     <div class="pet-name" id="pet-name">暂无灵宠</div>
-                    <div class="pet-level" id="pet-level">等级: 0</div>
+                    <div class="pet-level" id="pet-lv">等级: 0</div>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-primary" onclick="doCatchPet()">🎯 捕捉</button>
-                    <button class="btn btn-warning" onclick="doTrainPet()">💪 培养</button>
+                    <button class="btn btn-primary" onclick="catchPet()">🎯 捕捉</button>
+                    <button class="btn btn-warning" onclick="trainPet()">💪 培养</button>
                 </div>
             </section>
 
             <section id="sect-panel" class="panel">
                 <h2>🏛️ 宗门</h2>
                 <div class="sect-info">
-                    <p>宗门: <span id="sect-name">未建立</span></p>
-                    <p>等级: <span id="sect-level">0</span></p>
+                    <p>等级: <span id="sect-lv">0</span></p>
                 </div>
-                <div class="building-item">
-                    <span class="name">🧘 修炼室 Lv.<span id="training-room-level">0</span></span>
-                    <button class="btn btn-primary" onclick="doUpgradeBuilding('training')">升级</button>
-                </div>
-                <div class="building-item">
-                    <span class="name">🌿 灵药园 Lv.<span id="herb-garden-level">0</span></span>
-                    <button class="btn btn-primary" onclick="doUpgradeBuilding('herb')">升级</button>
-                </div>
-                <div class="building-item">
-                    <span class="name">🔨 炼器室 Lv.<span id="forge-level">0</span></span>
-                    <button class="btn btn-primary" onclick="doUpgradeBuilding('forge')">升级</button>
-                </div>
+                <div class="building-item"><span>修炼室 Lv.<span id="b-train">0</span></span><button class="btn btn-primary" onclick="upgradeB('train')">升级</button></div>
+                <div class="building-item"><span>灵药园 Lv.<span id="b-herb">0</span></span><button class="btn btn-primary" onclick="upgradeB('herb')">升级</button></div>
+                <div class="building-item"><span>炼器室 Lv.<span id="b-forge">0</span></span><button class="btn btn-primary" onclick="upgradeB('forge')">升级</button></div>
             </section>
 
             <section id="boss-panel" class="panel">
                 <h2>👹 世界BOSS</h2>
-                <div class="boss-timer"><p>下次BOSS: <span id="boss-timer">--:--:--</span></p></div>
-                <div id="boss-display" class="boss-card" style="display:none;">
+                <div class="boss-timer"><p>下次: <span id="boss-time">--:--:--</span></p></div>
+                <div id="boss-card" class="boss-card" style="display:none;">
                     <div class="boss-icon">👹</div>
                     <div class="boss-name" id="boss-name">BOSS</div>
-                    <div class="boss-hp"><div class="hp-bar"><div id="boss-hp-bar" class="hp-fill"></div></div><p><span id="boss-hp-text">0 / 0</span></p></div>
-                    <button class="btn btn-warning" onclick="doAttackBoss()">⚔️ 攻击</button>
-                </div>
-                <div id="boss-reward" class="boss-reward" style="display:none;">
-                    <h3>🎉 BOSS已被击杀！</h3><p>奖励: <span id="reward-amount">0</span> 灵气</p>
+                    <div class="boss-hp"><div class="hp-bar"><div id="boss-hp" class="hp-fill" style="width:100%"></div></div><p id="boss-hp-text">0/0</p></div>
+                    <button class="btn btn-warning" onclick="attackBoss()">⚔️ 攻击</button>
                 </div>
             </section>
 
             <section id="shop-panel" class="panel">
                 <h2>🏪 商店</h2>
-                <div class="shop-item"><span class="name">💊 灵气丹</span><button class="btn" onclick="doBuyItem('spiritPill')">100</button></div>
-                <div class="shop-item"><span class="name">🍎 灵根果</span><button class="btn" onclick="doBuyItem('rootFruit')">200</button></div>
-                <div class="shop-item"><span class="name">⚗️ 突破丹</span><button class="btn" onclick="doBuyItem('breakthroughPill')">500</button></div>
+                <div class="shop-item"><span>💊 灵气丹</span><button class="btn" onclick="buy('spirit')">100</button></div>
+                <div class="shop-item"><span>🍎 灵根果</span><button class="btn" onclick="buy('root')">200</button></div>
+                <div class="shop-item"><span>⚗️ 突破丹</span><button class="btn" onclick="buy('break')">500</button></div>
             </section>
         </main>
 
         <aside class="sidebar">
-            <h3>📊 角色</h3>
+            <h3>📊 战力</h3>
             <div class="sect-info">
-                <p>战力: <span id="combat-power">0</span></p>
-                <p>攻击: <span id="attack">10</span></p>
-                <p>防御: <span id="defense">5</span></p>
-                <p>生命: <span id="hp">100</span></p>
-            </div>
-            <div style="margin-top:15px;">
-                <button class="btn btn-primary" style="width:100%;font-size:0.8rem;padding:10px;" onclick="doSaveGame()">💾 保存</button>
+                <p id="combat">0</p>
             </div>
         </aside>
     </div>
 
     <script>
-    function switchTab(tab) {
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        document.querySelector('[data-tab="' + tab + '"]').classList.add('active');
-        document.getElementById(tab + '-panel').classList.add('active');
+    // 游戏数据
+    const REALMS = ['练气','筑基','金丹','元婴','化神','炼虚','合体','大乘','渡劫','仙人'];
+    const TECH = [
+        {n:'引气诀',t:'辅助',e:'灵气+10%',c:0}, {n:'金刚经',t:'防御',e:'防御+20%',c:100},
+        {n:'烈焰掌',t:'攻击',e:'攻击+25%',c:200}, {n:'水云袖',t:'防御',e:'生命+30%',c:300},
+        {n:'青木功',t:'辅助',e:'效率+20%',c:500}, {n:'紫雷诀',t:'攻击',e:'攻击+40%',c:800},
+        {n:'厚土盾',t:'防御',e:'防御+35%',c:1000}, {n:'九转灵诀',t:'辅助',e:'灵气+30%',c:1500},
+        {n:'天魔功',t:'攻击',e:'攻击+60%',c:2000}, {n:'大道无形',t:'辅助',e:'全+25%',c:5000}
+    ];
+    const PETS = ['🐍','🐅','🐉','🦅','🐢','🦄'];
+    const ELEMENTS = ['金','木','水','火','土'];
+    
+    let game = {
+        spirit: 0, realm: 0, realmLv: 1, cult: 0,
+        roots: [1,1,1,1,1], rootLv: 1, effLv: 1,
+        tech: [true], pets: [], curPet: null,
+        boss: null, sect: {train:0, herb:0, forge:0},
+        attack:10, defense:5, hp:100
+    };
+
+    function load() {
+        try {
+            const d = localStorage.getItem('xianxia_save');
+            if(d) game = {...game, ...JSON.parse(d)};
+        } catch(e) {}
+        render();
     }
 
-    function doCultivate() { if(game) game.cultivate(); }
-    function doBreakthrough() { if(game) game.breakthrough(); }
-    function doUpgradeRoot() { if(game) game.upgradeRoot(); }
-    function doUpgradeEfficiency() { if(game) game.upgradeEfficiency(); }
-    function doCraft() { if(game) game.craftArtifact(); }
-    function doCatchPet() { if(game) game.catchPet(); }
-    function doTrainPet() { if(game) game.trainPet(); }
-    function doUpgradeBuilding(t) { if(game) game.upgradeBuilding(t); }
-    function doAttackBoss() { if(game) game.attackBoss(); }
-    function doBuyItem(i) { if(game) game.buyItem(i); }
-    function doSaveGame() { if(game) game.saveGame(); }
+    function save() {
+        localStorage.setItem('xianxia_save', JSON.stringify(game));
+    }
+
+    function getRate() {
+        let r = (game.realm + 1) * game.realmLv;
+        r *= (1 + game.roots.reduce((a,b)=>a+b,0)*0.1);
+        r *= (1 + game.sect.herb * 0.1);
+        return r;
+    }
+
+    function getAttack() {
+        let a = 10 + game.realm*50 + game.realmLv*5;
+        a *= (1 + (game.tech[2]?0.25:0) + (game.tech[5]?0.4:0) + (game.tech[8]?0.6:0));
+        if(game.tech[9]) a *= 1.25;
+        if(game.curPet) a += game.curPet.atk;
+        return Math.floor(a);
+    }
+
+    function getCultNeed() {
+        return Math.floor(100 * Math.pow(1.5, game.realmLv));
+    }
+
+    function cultivate() {
+        let gain = game.effLv * (1 + (game.tech[4]?0.2:0)) * (1 + game.sect.train*0.2);
+        game.cult += gain;
+        let need = getCultNeed();
+        if(game.cult >= need) {
+            game.cult = 0;
+            if(game.realmLv < 10) game.realmLv++;
+            else if(game.realm < 9) { game.realm++; game.realmLv=1; }
+        }
+        updateUI();
+    }
+
+    function breakthrough() {
+        let cost = Math.floor(1000 * Math.pow(2, game.realm));
+        if(game.spirit >= cost) {
+            game.spirit -= cost;
+            if(Math.random() < 0.5 + game.realmLv*0.05) {
+                if(game.realmLv < 10) game.realmLv++;
+                else if(game.realm < 9) { game.realm++; game.realmLv=1; }
+            }
+        }
+        updateUI();
+    }
+
+    function upgradeRoot() {
+        let cost = Math.floor(10 * Math.pow(1.5, game.rootLv));
+        if(game.spirit >= cost) {
+            game.spirit -= cost;
+            game.rootLv++;
+            game.roots[Math.floor(Math.random()*5)]++;
+        }
+        updateUI();
+    }
+
+    function upgradeEff() {
+        let cost = Math.floor(50 * Math.pow(1.5, game.effLv));
+        if(game.spirit >= cost) {
+            game.spirit -= cost;
+            game.effLv++;
+        }
+        updateUI();
+    }
+
+    function learnTech(i) {
+        let t = TECH[i];
+        if(game.tech[i]) return;
+        if(game.spirit >= t.c) {
+            game.spirit -= t.c;
+            game.tech[i] = true;
+        }
+        renderTech();
+    }
+
+    function craft() {
+        if(game.spirit >= 1000) {
+            game.spirit -= 1000;
+            game.attack += 5;
+        }
+        updateUI();
+    }
+
+    function catchPet() {
+        if(game.spirit >= 500) {
+            game.spirit -= 500;
+            game.curPet = {icon:PETS[Math.floor(Math.random()*PETS.length)], lv:1, atk:10};
+        }
+        updateUI();
+    }
+
+    function trainPet() {
+        if(game.spirit >= 200 && game.curPet) {
+            game.spirit -= 200;
+            game.curPet.lv++;
+            game.curPet.atk += 5;
+        }
+        updateUI();
+    }
+
+    function upgradeB(type) {
+        let cost = {train:1000, herb:800, forge:1200}[type];
+        if(game.spirit >= cost) {
+            game.spirit -= cost;
+            game.sect[type]++;
+        }
+        updateUI();
+    }
+
+    function buy(item) {
+        let cost = {spirit:100, root:200, break:500}[item];
+        if(game.spirit >= cost) {
+            game.spirit -= cost;
+            if(item==='spirit') game.effLv++;
+            else if(item==='root') game.roots[Math.floor(Math.random()*5)] += 10;
+        }
+        updateUI();
+    }
+
+    function attackBoss() {}
+    function showTab(t) {
+        document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+        document.querySelector('[data-tab="'+t+'"]').classList.add('active');
+        document.getElementById(t+'-panel').classList.add('active');
+    }
+
+    function render() {
+        renderTech();
+        updateUI();
+    }
+
+    function renderTech() {
+        document.getElementById('tech-list').innerHTML = TECH.map((t,i)=>
+            '<div class="tech-card" onclick="learnTech('+i+')"><div class="name">'+t.n+'</div><div class="type">'+t.t+'</div><div class="effect">'+t.e+'</div><div class="cost">'+(game.tech[i]?'已学':t.c+'灵气')+'</div></div>'
+        ).join('');
+    }
+
+    function updateUI() {
+        document.getElementById('realm-name').textContent = REALMS[game.realm];
+        document.getElementById('realm-level').textContent = '('+game.realmLv+'层)';
+        document.getElementById('spirit-amount').textContent = Math.floor(game.spirit);
+        document.getElementById('spirit-rate').textContent = getRate().toFixed(1);
+        
+        let need = getCultNeed();
+        document.getElementById('cultivation').textContent = Math.floor(game.cult);
+        document.getElementById('required').textContent = need;
+        document.getElementById('progress-bar').style.width = (game.cult/need*100)+'%';
+        
+        document.getElementById('root-lv').textContent = game.rootLv;
+        document.getElementById('eff-lv').textContent = game.effLv;
+        
+        // 灵根
+        document.getElementById('roots-display').innerHTML = ELEMENTS.map((e,i)=>
+            '<span class="root '+(game.roots[i]>5?'active':'')+'">'+e+':'+game.roots[i]+'</span>'
+        ).join('');
+        
+        // 灵宠
+        if(game.curPet) {
+            document.getElementById('pet-icon').textContent = game.curPet.icon;
+            document.getElementById('pet-name').textContent = '灵宠';
+            document.getElementById('pet-lv').textContent = '等级: '+game.curPet.lv;
+        }
+        
+        // 宗门
+        document.getElementById('sect-lv').textContent = game.sect.train + game.sect.herb + game.sect.forge;
+        document.getElementById('b-train').textContent = game.sect.train;
+        document.getElementById('b-herb').textContent = game.sect.herb;
+        document.getElementById('b-forge').textContent = game.sect.forge;
+        
+        // 战力
+        game.attack = getAttack();
+        document.getElementById('combat').textContent = game.attack;
+        
+        save();
+    }
+
+    // 游戏循环
+    setInterval(() => {
+        game.spirit += getRate() / 10;
+        updateUI();
+    }, 100);
+
+    setInterval(save, 30000);
+    load();
     </script>
-    <script src="js/game.js?v=4"></script>
 </body>
 </html>
