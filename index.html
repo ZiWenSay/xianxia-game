@@ -2,31 +2,31 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>问道长生 - 仙侠放置</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
 </head>
 <body>
-    <div class="game-container">
-        <!-- 顶部状态栏 -->
-        <header class="game-header">
+    <div class="game-wrap">
+        <!-- 头部 -->
+        <header class="header">
             <h1>问道长生</h1>
-            <div class="player-info">
-                <div class="realm-display">
-                    <span class="label">境界</span>
-                    <span id="realm-name" class="value">练气期</span>
-                    <span id="realm-level" class="sub-value">第1层</span>
+            <div class="info-row">
+                <div class="info-item realm">
+                    <div class="label">境界</div>
+                    <div class="value"><span id="realm-name">练气</span> <span id="realm-level">(1层)</span></div>
                 </div>
-                <div class="spirit-display">
-                    <span class="label">灵气</span>
-                    <span id="spirit-amount" class="value">0</span>
-                    <span id="spirit-rate" class="sub-value">+0/秒</span>
+                <div class="info-item spirit">
+                    <div class="label">灵气</div>
+                    <div class="value"><span id="spirit-amount">0</span> <small>(<span id="spirit-rate">0</span>/s)</small></div>
                 </div>
             </div>
         </header>
 
-        <!-- 顶部导航 -->
-        <nav class="game-nav">
+        <!-- 导航 -->
+        <nav class="nav">
             <button class="nav-btn active" data-tab="cultivation">修炼</button>
             <button class="nav-btn" data-tab="techniques">功法</button>
             <button class="nav-btn" data-tab="artifacts">法宝</button>
@@ -36,182 +36,149 @@
             <button class="nav-btn" data-tab="shop">商店</button>
         </nav>
 
-        <!-- 主内容区 -->
-        <main class="game-content">
-            <!-- 修炼面板 -->
+        <!-- 内容 -->
+        <main class="content">
+            <!-- 修炼 -->
             <section id="cultivation-panel" class="panel active">
-                <div class="panel-header">
-                    <h2>🧘 修炼</h2>
+                <h2>🧘 修炼</h2>
+                
+                <div class="roots-section">
+                    <h3>🌟 灵根</h3>
+                    <div id="roots-display" class="roots-grid"></div>
                 </div>
-                <div class="panel-body">
-                    <!-- 灵根显示 -->
-                    <div class="roots-section">
-                        <h3>🌟 灵根</h3>
-                        <div id="roots-display" class="roots-grid"></div>
+                
+                <div class="progress-section">
+                    <h3>📈 修炼进度</h3>
+                    <div class="progress-bar">
+                        <div id="cultivation-progress-bar" class="progress-fill"></div>
                     </div>
-                    
-                    <!-- 修炼进度 -->
-                    <div class="progress-section">
-                        <h3>📈 修炼进度</h3>
-                        <div class="progress-bar">
-                            <div id="cultivation-progress-bar" class="progress-fill"></div>
-                        </div>
-                        <p><span id="current-cultivation">0</span> / <span id="required-cultivation">100</span></p>
+                    <p><span id="current-cultivation">0</span> / <span id="required-cultivation">100</span></p>
+                </div>
+                
+                <div class="btn-group">
+                    <button id="cultivate-btn" class="btn btn-primary">🧘 修炼</button>
+                    <button id="breakthrough-btn" class="btn btn-warning">⚡ 突破</button>
+                </div>
+                
+                <div class="upgrade-section">
+                    <h3>⬆️ 升级</h3>
+                    <div class="upgrade-item">
+                        <span class="name">灵根等级 Lv.<span id="root-level">1</span></span>
+                        <button class="btn btn-primary" onclick="game.upgradeRoot()">升级</button>
                     </div>
-                    
-                    <!-- 修炼按钮 -->
-                    <div class="cultivation-actions">
-                        <button id="cultivate-btn" class="action-btn primary">🧘 修炼</button>
-                        <button id="breakthrough-btn" class="action-btn warning">⚡ 突破</button>
-                    </div>
-                    
-                    <!-- 升级 -->
-                    <div class="upgrade-section">
-                        <h3>⬆️ 升级</h3>
-                        <div class="upgrade-item">
-                            <span>灵根等级 Lv.<span id="root-level">1</span></span>
-                            <button onclick="game.upgradeRoot()">升级</button>
-                        </div>
-                        <div class="upgrade-item">
-                            <span>修炼效率 Lv.<span id="efficiency-level">1</span></span>
-                            <button onclick="game.upgradeEfficiency()">升级</button>
-                        </div>
+                    <div class="upgrade-item">
+                        <span class="name">修炼效率 Lv.<span id="efficiency-level">1</span></span>
+                        <button class="btn btn-primary" onclick="game.upgradeEfficiency()">升级</button>
                     </div>
                 </div>
             </section>
 
-            <!-- 功法面板 -->
+            <!-- 功法 -->
             <section id="techniques-panel" class="panel">
-                <div class="panel-header">
-                    <h2>📚 功法</h2>
-                </div>
-                <div class="panel-body">
-                    <div id="techniques-list" class="techniques-grid"></div>
-                </div>
+                <h2>📚 功法</h2>
+                <div id="techniques-list" class="tech-grid"></div>
             </section>
 
-            <!-- 法宝面板 -->
+            <!-- 法宝 -->
             <section id="artifacts-panel" class="panel">
-                <div class="panel-header">
-                    <h2>⚔️ 法宝</h2>
+                <h2>⚔️ 法宝</h2>
+                <div class="artifact-slots">
+                    <div class="artifact-slot"><span class="label">武器</span><span class="name" id="slot-weapon">未装备</span></div>
+                    <div class="artifact-slot"><span class="label">防具</span><span class="name" id="slot-armor">未装备</span></div>
+                    <div class="artifact-slot"><span class="label">饰品</span><span class="name" id="slot-accessory">未装备</span></div>
                 </div>
-                <div class="panel-body">
-                    <div class="artifact-slots">
-                        <div class="artifact-slot" data-slot="weapon">
-                            <span class="slot-label">武器</span>
-                            <div class="slot-content">未装备</div>
-                        </div>
-                        <div class="artifact-slot" data-slot="armor">
-                            <span class="slot-label">防具</span>
-                            <div class="slot-content">未装备</div>
-                        </div>
-                        <div class="artifact-slot" data-slot="accessory">
-                            <span class="slot-label">饰品</span>
-                            <div class="slot-content">未装备</div>
-                        </div>
-                    </div>
-                    <button id="craft-btn" class="action-btn primary" style="margin-bottom:15px;">🔨 炼制法宝</button>
-                    <div id="artifacts-inventory" class="artifacts-grid"></div>
-                </div>
+                <button id="craft-btn" class="btn btn-primary" style="margin-bottom:15px;width:100%;">🔨 炼制法宝</button>
+                <div id="artifacts-inventory" class="tech-grid"></div>
             </section>
 
-            <!-- 灵宠面板 -->
+            <!-- 灵宠 -->
             <section id="pets-panel" class="panel">
-                <div class="panel-header">
-                    <h2>🐲 灵宠</h2>
+                <h2>🐲 灵宠</h2>
+                <div class="pet-card">
+                    <div class="pet-icon" id="pet-icon">🥚</div>
+                    <div class="pet-name" id="pet-name">暂无灵宠</div>
+                    <div class="pet-level" id="pet-level">等级: 0</div>
                 </div>
-                <div class="panel-body">
-                    <div class="pet-display">
-                        <div id="current-pet" class="pet-card">
-                            <div class="pet-icon">🥚</div>
-                            <div class="pet-name">暂无灵宠</div>
-                            <div class="pet-level">等级: 0</div>
-                        </div>
-                    </div>
-                    <div class="pet-actions">
-                        <button id="catch-pet-btn" class="action-btn primary">🎯 捕捉</button>
-                        <button id="train-pet-btn" class="action-btn warning">💪 培养</button>
-                    </div>
+                <div class="btn-group">
+                    <button id="catch-pet-btn" class="btn btn-primary">🎯 捕捉</button>
+                    <button id="train-pet-btn" class="btn btn-warning">💪 培养</button>
                 </div>
             </section>
 
-            <!-- 宗门面板 -->
+            <!-- 宗门 -->
             <section id="sect-panel" class="panel">
-                <div class="panel-header">
-                    <h2>🏛️ 宗门</h2>
+                <h2>🏛️ 宗门</h2>
+                <div class="sect-info">
+                    <p>宗门: <span id="sect-name">未建立</span></p>
+                    <p>等级: <span id="sect-level">0</span></p>
                 </div>
-                <div class="panel-body">
-                    <div class="sect-info">
-                        <p>宗门: <span id="sect-name">未建立</span></p>
-                        <p>等级: <span id="sect-level">0</span></p>
-                    </div>
-                    <div class="sect-buildings">
-                        <div class="building-item">
-                            <span>🧘 修炼室 Lv.<span id="training-room-level">0</span></span>
-                            <button onclick="game.upgradeBuilding('training')">升级</button>
-                        </div>
-                        <div class="building-item">
-                            <span>🌿 灵药园 Lv.<span id="herb-garden-level">0</span></span>
-                            <button onclick="game.upgradeBuilding('herb')">升级</button>
-                        </div>
-                        <div class="building-item">
-                            <span>🔨 炼器室 Lv.<span id="forge-level">0</span></span>
-                            <button onclick="game.upgradeBuilding('forge')">升级</button>
-                        </div>
-                    </div>
+                <div class="building-item">
+                    <span class="name">🧘 修炼室 Lv.<span id="training-room-level">0</span></span>
+                    <button class="btn btn-primary" onclick="game.upgradeBuilding('training')">升级</button>
+                </div>
+                <div class="building-item">
+                    <span class="name">🌿 灵药园 Lv.<span id="herb-garden-level">0</span></span>
+                    <button class="btn btn-primary" onclick="game.upgradeBuilding('herb')">升级</button>
+                </div>
+                <div class="building-item">
+                    <span class="name">🔨 炼器室 Lv.<span id="forge-level">0</span></span>
+                    <button class="btn btn-primary" onclick="game.upgradeBuilding('forge')">升级</button>
                 </div>
             </section>
 
-            <!-- BOSS面板 -->
+            <!-- BOSS -->
             <section id="boss-panel" class="panel">
-                <div class="panel-header">
-                    <h2>👹 世界BOSS</h2>
+                <h2>👹 世界BOSS</h2>
+                <div class="boss-timer">
+                    <p>下次BOSS: <span id="boss-timer">--:--:--</span></p>
                 </div>
-                <div class="panel-body">
-                    <div class="boss-timer">
-                        <p>下次BOSS: <span id="boss-timer">--:--:--</span></p>
+                <div id="boss-display" class="boss-card" style="display:none;">
+                    <div class="boss-icon">👹</div>
+                    <div class="boss-name" id="boss-name">BOSS</div>
+                    <div class="boss-hp">
+                        <div class="hp-bar"><div id="boss-hp-bar" class="hp-fill"></div></div>
+                        <p><span id="boss-hp-text">0 / 0</span></p>
                     </div>
-                    <div id="boss-display" class="boss-card" style="display:none;">
-                        <div class="boss-icon">👹</div>
-                        <div class="boss-name">BOSS名称</div>
-                        <div class="boss-hp">
-                            <div class="hp-bar">
-                                <div id="boss-hp-bar" class="hp-fill"></div>
-                            </div>
-                            <span id="boss-hp-text">0 / 0</span>
-                        </div>
-                        <button id="attack-boss-btn" class="action-btn danger">⚔️ 攻击</button>
-                    </div>
-                    <div id="boss-reward" class="boss-reward" style="display:none;">
-                        <h3>🎉 BOSS已被击杀！</h3>
-                        <p>奖励: <span id="reward-amount">0</span> 灵气</p>
-                    </div>
+                    <button id="attack-boss-btn" class="btn btn-warning">⚔️ 攻击</button>
+                </div>
+                <div id="boss-reward" class="boss-reward" style="display:none;">
+                    <h3>🎉 BOSS已被击杀！</h3>
+                    <p>奖励: <span id="reward-amount">0</span> 灵气</p>
                 </div>
             </section>
 
-            <!-- 商店面板 -->
+            <!-- 商店 -->
             <section id="shop-panel" class="panel">
-                <div class="panel-header">
-                    <h2>🏪 商店</h2>
+                <h2>🏪 商店</h2>
+                <div class="shop-item">
+                    <span class="name">💊 灵气丹</span>
+                    <button class="btn" onclick="game.buyItem('spiritPill')">100</button>
                 </div>
-                <div class="panel-body">
-                    <div class="shop-items">
-                        <div class="shop-item">
-                            <span>💊 灵气丹</span>
-                            <button onclick="game.buyItem('spiritPill')">100</button>
-                        </div>
-                        <div class="shop-item">
-                            <span>🍎 灵根果</span>
-                            <button onclick="game.buyItem('rootFruit')">200</button>
-                        </div>
-                        <div class="shop-item">
-                            <span>⚗️ 突破丹</span>
-                            <button onclick="game.buyItem('breakthroughPill')">500</button>
-                        </div>
-                    </div>
+                <div class="shop-item">
+                    <span class="name">🍎 灵根果</span>
+                    <button class="btn" onclick="game.buyItem('rootFruit')">200</button>
+                </div>
+                <div class="shop-item">
+                    <span class="name">⚗️ 突破丹</span>
+                    <button class="btn" onclick="game.buyItem('breakthroughPill')">500</button>
                 </div>
             </section>
         </main>
+
+        <!-- 侧边栏(桌面) -->
+        <aside class="sidebar">
+            <h3>📊 角色</h3>
+            <div class="sect-info">
+                <p>战力: <span id="combat-power">0</span></p>
+                <p>攻击: <span id="attack">10</span></p>
+                <p>防御: <span id="defense">5</span></p>
+                <p>生命: <span id="hp">100</span></p>
+            </div>
+            <div style="margin-top:15px;">
+                <button class="btn btn-primary" style="width:100%;font-size:0.8rem;padding:10px;" onclick="game.saveGame()">💾 保存</button>
+                <button class="btn" style="width:100%;font-size:0.8rem;padding:10px;margin-top:8px;background:#333;color:#888;" onclick="game.resetGame()">🗑️ 重置</button>
+            </div>
+        </aside>
     </div>
 
     <script src="js/game.js"></script>
