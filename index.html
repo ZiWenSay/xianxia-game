@@ -201,6 +201,7 @@
                 ['spirit','stone','herb','ore','realm','realmLv','cult','disciples'].forEach(k=>game[k]=getNum(game[k]));
                 game.roots=getRoots();
                 if(!game.buildings)game.buildings={field:1,train:0,alchemy:0,forge:0,park:0,array:0,queue:0};
+                if(game.buildings.field === undefined) game.buildings.field = 1;
                 if(!game.tech)game.tech={0:true};
                 if(!game.techLevel)game.techLevel={0:1};
                 if(!game.queues)game.queues=[];
@@ -420,12 +421,12 @@
         document.getElementById('field-level').textContent=(game.buildings && game.buildings.field) || 1;
         document.getElementById('field-workers').textContent=game.fieldWorkers;
         
-        // 建筑 (灵田不显示在建筑列表中)
+        // 建筑
         let bHtml='';
         for(let k in BUILDINGS){
-            if(k === 'field') continue; // 灵田在首页显示
             let b=BUILDINGS[k];
-            let lv=game.buildings[k];
+            let lv = game.buildings[k];
+            if(lv === undefined) lv = (k === 'field' ? 1 : 0);
             let can=canUpgrade(k);
             let reqs=[];
             for(let e in b.req)reqs.push(e+'灵根'+b.req[e]);
